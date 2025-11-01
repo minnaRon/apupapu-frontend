@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Footer from './components/Footer'
 import helpService from './services/helps'
 import loginService from './services/login'
@@ -6,6 +6,8 @@ import Help from './components/Help'
 import Notification from './components/Notification'
 import HelpForm from './components/HelpForm'
 import LoginForm from './components/LoginForm'
+import Togglable from './components/Togglable'  
+
 
 
 const App = () => {
@@ -35,6 +37,8 @@ const App = () => {
       helpService.setToken(user.token)
     }
   }, [])
+
+  const helpFormRef = useRef()
 
   const notify = (message, type = 'info') => {
     setNotification({ message, type })
@@ -83,12 +87,14 @@ const App = () => {
   }
 
   const addHelp = (event) => {
-  event.preventDefault()
-  const helpObject = {
-    tittle: newTittle,
-    description: newDescription || 'ei tarkempaa kuvausta',
-    beans: newBeans
-  }
+    event.preventDefault()
+    helpFormRef.current.toggleVisibility()
+
+    const helpObject = {
+      tittle: newTittle,
+      description: newDescription || 'ei tarkempaa kuvausta',
+      beans: newBeans
+    }
     helpService
       .create(helpObject)
       .then(returnedHelp => {
@@ -118,32 +124,38 @@ const App = () => {
     <div>
        <h1>Apu&papu</h1>
        <Notification notification={notification} />
-        {!user && 
-         <LoginForm
-          handleLogin={handleLogin}
-          username={username}
-          password={password}
-          handleUsernameChange={handleUsernameChange}
-          handlePasswordChange={handlePasswordChange}
-         />
+       {!user && 
+        <Togglable buttonLabel="KIRJAUDU">
+          <LoginForm
+            handleLogin={handleLogin}
+            username={username}
+            password={password}
+            handleUsernameChange={handleUsernameChange}
+            handlePasswordChange={handlePasswordChange}
+          />
+        </Togglable>
         }
        {user && (
         <div>
           <div>
             {user.name} kirjautuneena
-            <button onClick={handleLogOut} style={{ marginLeft: '20px' }}>KIRJAUDU ULOS</button>
+             <button onClick={handleLogOut} style={{ marginLeft: '20px' }}>
+               KIRJAUDU ULOS
+             </button>
+           </div>
+            <Togglable buttonLabel="LISÄÄ UUSI APU" ref={helpFormRef}> 
+              <h3>Lisää uusi:</h3>
+              <HelpForm
+                addHelp={addHelp}
+                tittle={newTittle}
+                description={newDescription}
+                beans={newBeans}
+                handleTittleChange={handleTittleChange}
+                handleDescriptionChange={handleDescriptionChange}
+                handleBeansChange={handleBeansChange}
+              />
+            </Togglable>
           </div>
-          <h3>Lisää uusi:</h3>
-          <HelpForm
-            addHelp={addHelp}
-            tittle={newTittle}
-            description={newDescription}
-            beans={newBeans}
-            handleTittleChange={handleTittleChange}
-            handleDescriptionChange={handleDescriptionChange}
-            handleBeansChange={handleBeansChange}
-           />
-         </div>
        )}
         <h3>Voin auttaa näissä tehtävissä:</h3>
         <ul>
