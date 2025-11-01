@@ -12,10 +12,6 @@ import Togglable from './components/Togglable'
 
 const App = () => {
   const [helps, setHelps] = useState([])
-  const [newTittle, setNewTittle] = useState('apuna tässä tehtävässä..')
-  const [newDescription, setNewDescription] = useState('')
-  const [newBeans, setNewBeans] = useState(0)
-  const [showDescription, setShowDescription] = useState(false)
   const [notification, setNotification] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('') 
@@ -52,7 +48,6 @@ const App = () => {
     
     try {
       const user = await loginService.login({ username, password })
-      console.log(user.token)
       window.localStorage.setItem(
         'loggedHelpAppUser', JSON.stringify(user)
       ) 
@@ -70,15 +65,6 @@ const App = () => {
     setUser(null)
   }
 
-  const handleTittleChange = (event) => {
-    setNewTittle(event.target.value)
-  }
-  const handleDescriptionChange = (event) => {
-    setNewDescription(event.target.value)
-  }
-  const handleBeansChange = (event) => {
-    setNewBeans(event.target.value)
-  }
   const handleUsernameChange = (event) => {
     setUsername(event.target.value)
   }
@@ -86,45 +72,41 @@ const App = () => {
     setPassword(event.target.value)
   }
 
-  const addHelp = (event) => {
-    event.preventDefault()
+  const addHelp = (helpObject) => {
     helpFormRef.current.toggleVisibility()
-
-    const helpObject = {
-      tittle: newTittle,
-      description: newDescription || 'ei tarkempaa kuvausta',
-      beans: newBeans
-    }
     helpService
       .create(helpObject)
       .then(returnedHelp => {
         setHelps(helps.concat(returnedHelp))
-        notify(`Apu: ${returnedHelp.tittle} vaihdetaan papuihin ${returnedHelp.beans} lisätty \u{1F970}`)
-        setNewTittle('')
-        setNewDescription('')
-        setNewBeans(0)
+        notify(`Apu: ${returnedHelp.task} vaihdetaan papuihin ${returnedHelp.beans} lisätty \u{1F970}`)
       })
       .catch(error => {
-      notify(`Apua ${newTittle} ei voinut lisätä, virhe: ${error.message}`)
+      notify(`Apua ${helpObject.task} ei voinut lisätä, virhe: ${error.message}`)
     })
   }
 
   const removeHelp = id => {
     const toRemove = helps.find(h => h.id === id)
-    const ok = window.confirm(`Poistetaanko apu: ${toRemove.tittle}?`)
+    const ok = window.confirm(`Poistetaanko apu: ${toRemove.task}?`)
     if (ok) {
-      helpService.remove(id).then(() => {
+      helpService
+        .remove(id)
+        .then(() => {
         setHelps(helps.filter(h => h.id !== id))
-        notify(`Poistettiin apu ${toRemove.tittle}`)
-      })
+        notify(`Poistettiin apu ${toRemove.task}`)
+        })
+        .catch(error => {
+          notify(`virhe: ${error.message}`)
+        })
     }
   }
 
    return (
     <div>
-       <h1>Apu&papu</h1>
-       <Notification notification={notification} />
-       {!user && 
+      <h1>Apu&papu</h1>
+      <Notification notification={notification} />
+
+      {!user &&
         <Togglable buttonLabel="KIRJAUDU">
           <LoginForm
             handleLogin={handleLogin}
@@ -134,41 +116,50 @@ const App = () => {
             handlePasswordChange={handlePasswordChange}
           />
         </Togglable>
-        }
+      }
+
        {user && (
         <div>
           <div>
-            {user.name} kirjautuneena
+             {user.name} kirjautuneena
+             
              <button onClick={handleLogOut} style={{ marginLeft: '20px' }}>
                KIRJAUDU ULOS
              </button>
            </div>
-            <Togglable buttonLabel="LISÄÄ UUSI APU" ref={helpFormRef}> 
-              <h3>Lisää uusi:</h3>
-              <HelpForm
-                addHelp={addHelp}
-                tittle={newTittle}
-                description={newDescription}
-                beans={newBeans}
-                handleTittleChange={handleTittleChange}
-                handleDescriptionChange={handleDescriptionChange}
-                handleBeansChange={handleBeansChange}
-              />
-            </Togglable>
-          </div>
+            
+           <Togglable buttonLabel="LISÄÄ UUSI APU" ref={helpFormRef}> 
+              <HelpForm createHelp={addHelp} />
+           </Togglable>
+
+        <h3>Tarjoan apua näihin askareisiin:</h3>
+           <ul>
+             {helps
+               .filter(h => h.user.username === user.username)
+               .reverse()
+               .map(help =>
+                <Help
+                  key={help.id}
+                  help={help}
+                  removeHelp={() => removeHelp(help.id)}
+                />
+              )}
+           </ul>
+        </div>
        )}
-        <h3>Voin auttaa näissä tehtävissä:</h3>
+
+        <h3>Apua saatavilla näihin askareisiin:</h3>
         <ul>
-         {helps.map(help =>
-           <Help
-             key={help.id}
-             help={help}
-             removeHelp={() => removeHelp(help.id)}
-             showDescription={showDescription}
-             setShowDescription={setShowDescription}
-           />
+         {helps
+          .sort((a, b) => a.task.localeCompare(b.task))
+          .map(help =>
+            <Help
+              key={help.id}
+              help={help}
+            />
          )}
        </ul>
+
       <Footer />
      </div>
      
