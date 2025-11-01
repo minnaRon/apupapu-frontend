@@ -1,0 +1,14 @@
+{
+  "helps": [
+    {
+      "id": "1",
+      "tittle": "Pellillinen korvapuusteja",
+      "beans": 5
+    },
+    {
+      "id": "2",
+      "tittle": "Renkaanvaihto",
+      "beans": 20
+    }
+  ]
+}
