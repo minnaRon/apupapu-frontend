@@ -13,8 +13,6 @@ import Togglable from './components/Togglable'
 const App = () => {
   const [helps, setHelps] = useState([])
   const [notification, setNotification] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('') 
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -43,9 +41,7 @@ const App = () => {
     }, 3000);
   }
 
-  const handleLogin = async event => {
-    event.preventDefault()
-    
+  const handleLogin = async ({username, password}) => {
     try {
       const user = await loginService.login({ username, password })
       window.localStorage.setItem(
@@ -53,8 +49,6 @@ const App = () => {
       ) 
       helpService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
     } catch {
       notify('kirjautuminen ei onnistunut, tarkista antamasi tiedot', 'alert')
     }
@@ -63,13 +57,6 @@ const App = () => {
   const handleLogOut = () => {
     window.localStorage.clear()
     setUser(null)
-  }
-
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value)
-  }
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value)
   }
 
   const addHelp = (helpObject) => {
@@ -108,13 +95,7 @@ const App = () => {
 
       {!user &&
         <Togglable buttonLabel="KIRJAUDU">
-          <LoginForm
-            handleLogin={handleLogin}
-            username={username}
-            password={password}
-            handleUsernameChange={handleUsernameChange}
-            handlePasswordChange={handlePasswordChange}
-          />
+          <LoginForm credentials={handleLogin} />
         </Togglable>
       }
 
@@ -135,9 +116,9 @@ const App = () => {
         <h3>Tarjoan apua näihin askareisiin:</h3>
            <ul>
              {helps
-               .filter(h => h.user.username === user.username)
-               .reverse()
-               .map(help =>
+              .filter(h => h.user.username === user.username)
+              .sort((a, b) => a.task.localeCompare(b.task))
+              .map(help =>
                 <Help
                   key={help.id}
                   help={help}
