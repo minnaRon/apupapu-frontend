@@ -19,7 +19,7 @@ const Togglable = (props) => {
     background: 'lightgrey',
   }
 
-  
+
   return (
     <div>
       <div style={hideWhenVisible}>

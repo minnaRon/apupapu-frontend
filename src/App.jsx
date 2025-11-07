@@ -1,149 +1,66 @@
-import { useState, useEffect, useRef } from 'react'
-import Footer from './components/Footer'
-import helpService from './services/helps'
-import loginService from './services/login'
-import Help from './components/Help'
+import { useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import HelpForm from './components/HelpForm'
-import LoginForm from './components/LoginForm'
-import Togglable from './components/Togglable'  
-
-
+import HelpList from './components/HelpList'
+import Togglable from './components/Togglable'
+import Footer from './components/Footer'
+import { logoutUser, setUserFromStorage } from './reducers/userReducer'
+import { initializeHelps } from './reducers/helpReducer'
 
 const App = () => {
-  const [helps, setHelps] = useState([])
-  const [notification, setNotification] = useState(null)
-  const [user, setUser] = useState(null)
+  const user = useSelector(state => state.user.user)
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    helpService
-      .getAll()
-      .then(initialHelps => {
-        setHelps(initialHelps)
-      })
+    dispatch(initializeHelps())
   }, [])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedHelpAppUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      helpService.setToken(user.token)
-    }
+    dispatch(setUserFromStorage())
   }, [])
 
   const helpFormRef = useRef()
 
-  const notify = (message, type = 'info') => {
-    setNotification({ message, type })
-    setTimeout(() => {
-      setNotification(null)
-    }, 3000);
-  }
-
-  const handleLogin = async ({username, password}) => {
-    try {
-      const user = await loginService.login({ username, password })
-      window.localStorage.setItem(
-        'loggedHelpAppUser', JSON.stringify(user)
-      ) 
-      helpService.setToken(user.token)
-      setUser(user)
-    } catch {
-      notify('kirjautuminen ei onnistunut, tarkista antamasi tiedot', 'alert')
-    }
-  }
-
   const handleLogOut = () => {
-    window.localStorage.clear()
-    setUser(null)
+    dispatch(logoutUser())
   }
 
-  const addHelp = (helpObject) => {
-    helpFormRef.current.toggleVisibility()
-    helpService
-      .create(helpObject)
-      .then(returnedHelp => {
-        setHelps(helps.concat(returnedHelp))
-        notify(`Apu: ${returnedHelp.task} vaihdetaan papuihin ${returnedHelp.beans} lisätty \u{1F970}`)
-      })
-      .catch(error => {
-      notify(`Apua ${helpObject.task} ei voinut lisätä, virhe: ${error.message}`)
-    })
-  }
-
-  const removeHelp = id => {
-    const toRemove = helps.find(h => h.id === id)
-    const ok = window.confirm(`Poistetaanko apu: ${toRemove.task}?`)
-    if (ok) {
-      helpService
-        .remove(id)
-        .then(() => {
-        setHelps(helps.filter(h => h.id !== id))
-        notify(`Poistettiin apu ${toRemove.task}`)
-        })
-        .catch(error => {
-          notify(`virhe: ${error.message}`)
-        })
-    }
-  }
-
-   return (
+  return (
     <div>
       <h1>Apu&papu</h1>
-      <Notification notification={notification} />
+      <Notification />
 
       {!user &&
         <Togglable buttonLabel="KIRJAUDU">
-          <LoginForm credentials={handleLogin} />
+          <LoginForm />
         </Togglable>
       }
 
-       {user && (
+      {user && (
         <div>
           <div>
-             {user.name} kirjautuneena
-             
-             <button onClick={handleLogOut} style={{ marginLeft: '20px' }}>
+            {user.name} kirjautuneena
+            <button onClick={handleLogOut} style={{ marginLeft: '20px' }}>
                KIRJAUDU ULOS
-             </button>
-           </div>
-            
-           <Togglable buttonLabel="LISÄÄ UUSI APU" ref={helpFormRef}> 
-              <HelpForm createHelp={addHelp} />
-           </Togglable>
+            </button>
+          </div>
+          <Togglable buttonLabel="LISÄÄ UUSI APU" ref={helpFormRef}>
+            <HelpForm helpFormRef={helpFormRef} />
+          </Togglable>
 
-        <h3>Tarjoan apua näihin askareisiin:</h3>
-           <ul>
-             {helps
-              .filter(h => h.user.username === user.username)
-              .sort((a, b) => a.task.localeCompare(b.task))
-              .map(help =>
-                <Help
-                  key={help.id}
-                  help={help}
-                  removeHelp={() => removeHelp(help.id)}
-                />
-              )}
-           </ul>
+          <h3>Tarjoan apua näihin askareisiin:</h3>
+          <HelpList filter={h => h.user.id === user.id} />
         </div>
-       )}
+      )}
 
-        <h3>Apua saatavilla näihin askareisiin:</h3>
-        <ul>
-         {helps
-          .sort((a, b) => a.task.localeCompare(b.task))
-          .map(help =>
-            <Help
-              key={help.id}
-              help={help}
-            />
-         )}
-       </ul>
+      <h3>Apua saatavilla näihin askareisiin:</h3>
+      <HelpList />
 
       <Footer />
-     </div>
-     
+    </div>
+
   )
 }
 export default App

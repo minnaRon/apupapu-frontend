@@ -1,52 +1,60 @@
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { appendHelp } from '../reducers/helpReducer'
 
-const HelpForm = ({ createHelp }) => { 
+const HelpForm = ({ helpFormRef }) => {
   const [task, setTask] = useState('')
   const [description, setDescription] = useState('')
   const [beans, setBeans] = useState('')
 
-  const addHelp = (event) => {
-      event.preventDefault()
-      createHelp({
-        task: task,
-        description: description || 'ei tarkempaa kuvausta',
-        beans: beans
-      })
-      setTask('')
-      setDescription('')
-      setBeans(0)
+  const dispatch = useDispatch()
+
+  const addHelp = async (event) => {
+    event.preventDefault()
+    helpFormRef.current.toggleVisibility()
+    const newHelp = {
+      task,
+      beans,
+      description: description || 'ei tarkempaa kuvausta',
+    }
+    dispatch(appendHelp(newHelp))
+    setTask('')
+    setDescription('')
+    setBeans(0)
   }
-  
+
   return (
     <div>
       <h3>Lisää uusi:</h3>
       <form style={{ color: 'green' }} onSubmit={addHelp}>
-
-        apuna:
-        <input style={{color: 'grey'}}
-          value={task}
-           onChange={event => setTask(event.target.value)} />
+        <label>
+          apuna:
+          <input style={{ color: 'grey' }}
+            value={task}
+            onChange={event => setTask(event.target.value)} />
+        </label>
         <br />
-
-        papua:
-        <input
-          style={{ width:'40px', color: 'grey' }}
-          type='number'
-          value={beans}
-          onChange={event => setBeans(event.target.value)}
-          min='0'
-        />
+        <label>
+          papua:
+          <input
+            style={{ width:'40px', color: 'grey' }}
+            type='number'
+            value={beans}
+            onChange={event => setBeans(event.target.value)}
+            min='0'
+          />
+        </label>
         <br />
-
-        tarkempi kuvaus:
+        <label>
+          tarkempi kuvaus:
+          <br />
+          <textarea
+            style={{ color: 'grey' }}
+            rows = "5"
+            value={description}
+            onChange={event => setDescription(event.target.value)} />
+        </label>
         <br />
-        <textarea
-          style={{color: 'grey'}}
-          rows = "5"
-          value={description}
-          onChange={event => setDescription(event.target.value)} />
-        <br />
-
         <button type="submit">TALLENNA</button>
       </form>
     </div>

@@ -1,7 +1,18 @@
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { removeHelp } from '../reducers/helpReducer'
 
-const Help = ({ help, removeHelp }) => {
+const Help = ({ help }) => {
   const [showDescription, setShowDescription] = useState(false)
+  const user = useSelector(state => state.user.user)
+
+  const dispatch = useDispatch()
+
+  const deleteHelp = () => {
+    if (window.confirm(`Poistetaanko ${help.task}?`)) {
+      dispatch(removeHelp(help.id))
+    }
+  }
 
   return (
     <li className='help'>
@@ -9,8 +20,8 @@ const Help = ({ help, removeHelp }) => {
 
       <button style={{ marginLeft: '20px' }} onClick={() => setShowDescription(!showDescription)}>NÄYTÄ KUVAUS</button>
 
-      {removeHelp &&
-        <button style={{ marginLeft: '20px' }} onClick={removeHelp}>POISTA</button>
+      { user && user.id === help.user.id &&
+        <button style={{ marginLeft: '20px' }} onClick={deleteHelp}>POISTA</button>
       }
 
       <p>{showDescription && <span>{help.user.name}: {help.description}</span>}</p>
