@@ -18,10 +18,10 @@ export const appendHelp = createAsyncThunk(
   async (content, { dispatch, rejectWithValue }) => {
     try {
       const response = await helpService.create(content)
-      dispatch(notify({ message: `Lisättiin apuihin: ${response.task}`, type: 'info' }))
+      dispatch(notify({ message: `Lisättiin apuihin: ${response.task}`, type: 'success' }))
       return response
     } catch (err) {
-      dispatch(notify({ message: `Lisääminen ei onnistunut, ilmeni virhe: ${err}`, type: 'alert' }))
+      dispatch(notify({ message: `Lisääminen ei onnistunut, ilmeni virhe: ${err}`, type: 'error' }))
       return rejectWithValue(err.message)
     }
   }
@@ -32,10 +32,10 @@ export const removeHelp = createAsyncThunk(
   async (id, { dispatch, rejectWithValue }) => {
     try {
       await helpService.remove(id)
-      dispatch(notify({ message: 'Poisto onnistui', type: 'info' }))
+      dispatch(notify({ message: 'Poisto onnistui', type: 'success' }))
       return id
     } catch (err) {
-      dispatch(notify({ message: `Poisto ei onnistunut, tapahtui virhe: ${err}`, type: 'alert' }))
+      dispatch(notify({ message: `Poisto ei onnistunut, tapahtui virhe: ${err}`, type: 'error' }))
       return rejectWithValue(err.message)
     }
   }
@@ -51,7 +51,7 @@ const helpSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Fulfilled-tapaukset
+      // Fulfilled-cases
       .addCase(initializeHelps.fulfilled, (state, action) => {
         state.helps = action.payload
       })
@@ -61,7 +61,7 @@ const helpSlice = createSlice({
       .addCase(removeHelp.fulfilled, (state, action) => {
         state.helps = state.helps.filter(h => h.id !== action.payload)
       })
-      // Matcherit loading/error
+      // Matchers loading/error
       .addMatcher(isPending, (state) => {
         state.loading = true
         state.error = null

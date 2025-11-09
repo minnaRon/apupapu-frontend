@@ -1,4 +1,10 @@
-import { createSlice, createAsyncThunk, isPending, isFulfilled, isRejected } from '@reduxjs/toolkit'
+import {
+  createSlice,
+  createAsyncThunk,
+  isPending,
+  isFulfilled,
+  isRejected
+} from '@reduxjs/toolkit'
 import { notify } from './notificationReducer'
 import loginService from '../services/login'
 import userService from '../services/user'
@@ -15,10 +21,10 @@ export const loginUser = createAsyncThunk(
     try {
       const user = await loginService.login(credentials)
       userService.setUser(user)
-      dispatch(notify({ message: `Tervetuloa ${user.name}!`, type: 'info' }))
+      dispatch(notify({ message: `Tervetuloa ${user.name}!`, type: 'success' }))
       return user
     } catch (err) {
-      dispatch(notify({ message: `kirjautuminen ei onnistunut, ilmeni virhe ${err}`, type: 'alert' }))
+      dispatch(notify({ message: `kirjautuminen ei onnistunut, ilmeni virhe ${err}`, type: 'error' }))
       return rejectWithValue(err.message)
     }
   }
@@ -38,11 +44,11 @@ const slice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-    // Fulfilled-tapaukset
+    // Fulfilled-cases
       .addCase(loginUser.fulfilled, (state, action) => {
         state.user = action.payload
       })
-    // Matcherit loading/error
+    // Matchers loading/error
       .addMatcher(isPending, (state) => {
         state.loading = true
         state.error = null

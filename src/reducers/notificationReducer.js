@@ -15,7 +15,7 @@ const slice = createSlice({
 /**
  * usage:
  * import { notify } from './notificationReducer'
- * dispatch(notify({ message: `message`, type: 'info' or 'alert'}))
+ * dispatch(notify({ message: `message`, type: 'success', 'error', 'warning' or 'info'}))
  */
 export const notify = (notification) => {
   return async(dispatch) => {

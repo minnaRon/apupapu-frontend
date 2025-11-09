@@ -9,7 +9,7 @@ const Footer = () => {
     <div style={footerStyle}>
       <br />
       <p>
-        Apuja ja papuja kansalle vuodesta 2025
+        Apuja ja papuja kaikelle kansalle vuodesta 2025
       </p>
     </div>
   )
