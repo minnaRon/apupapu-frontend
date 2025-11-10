@@ -1,16 +1,15 @@
 import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { Container } from '@mui/material'
 import Notification from './components/Notification'
-import HelpForm from './components/help/HelpForm'
-import HelpList from './components/help/HelpList'
 import Header from './components/Header'
+import HelpHomePage from './components/help/HelpHomePage'
 import Footer from './components/Footer'
 import { setUserFromStorage } from './reducers/userReducer'
 import { initializeHelps } from './reducers/helpReducer'
 
 const App = () => {
-  const user = useSelector(state => state.user.user)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -26,16 +25,11 @@ const App = () => {
       <Header />
       <Notification />
 
-      {user && (
-        <>
-          <HelpForm />
-          <h3>Tarjoan apua näihin askareisiin:</h3>
-          <HelpList filter={h => h.user.id === user.id} />
-        </>
-      )}
+      <Routes>
+        <Route path='/' element={<Navigate to='/helps' />} />
+        <Route path='/helps' element={<HelpHomePage />} />
+      </Routes>
 
-      <h3>Apua saatavilla näihin askareisiin:</h3>
-      <HelpList />
       <Footer />
     </Container>
   )
