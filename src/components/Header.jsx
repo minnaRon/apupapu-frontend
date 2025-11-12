@@ -77,7 +77,7 @@ const Header = () => {
               textDecoration: 'none',
             }}
           >
-            Apu&papu
+            apu&papu
           </Typography>
 
           {/* navmenu */}
@@ -131,7 +131,7 @@ const Header = () => {
               textDecoration: 'none',
             }}
           >
-            Apu&papu
+            apu&papu
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (

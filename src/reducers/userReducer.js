@@ -24,7 +24,9 @@ export const loginUser = createAsyncThunk(
       dispatch(notify({ message: `Tervetuloa ${user.name}!`, type: 'success' }))
       return user
     } catch (err) {
-      dispatch(notify({ message: `kirjautuminen ei onnistunut, ilmeni virhe ${err}`, type: 'error' }))
+      dispatch(notify({
+        message: `kirjautuminen ei onnistunut, ilmeni virhe ${err}`, type: 'error'
+      }))
       return rejectWithValue(err.message)
     }
   }

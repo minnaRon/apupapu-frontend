@@ -1,14 +1,24 @@
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Button,
+  IconButton
+} from '@mui/material'
 import AddTaskOutlinedIcon from '@mui/icons-material/AddTaskOutlined'
-import { IconButton } from '@mui/material'
+
 import { useState } from 'react'
+import useField from '../../hooks/useField'
 import { useDispatch } from 'react-redux'
 import { appendHelp } from '../../reducers/helpReducer'
-import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button } from '@mui/material'
+
 
 const HelpForm = () => {
-  const [task, setTask] = useState('')
-  const [description, setDescription] = useState('')
-  const [beans, setBeans] = useState('')
+  const task = useField('text')
+  const description = useField('text')
+  const beans = useField('number')
   const [open, setOpen] = useState(false)
 
   const dispatch = useDispatch()
@@ -21,17 +31,17 @@ const HelpForm = () => {
   /** closes a dialog */
   const handleClose = () => {
     setOpen(false)
-    setTask('')
-    setDescription('')
-    setBeans('')
+    task.reset()
+    description.reset()
+    beans.reset()
   }
 
   const addHelp = async (event) => {
     event.preventDefault()
     const newHelp = {
-      task,
-      beans,
-      description: description || 'ei tarkempaa kuvausta',
+      task: task.value,
+      beans: beans.value,
+      description: description.value || 'ei tarkempaa kuvausta',
     }
     dispatch(appendHelp(newHelp))
     handleClose()  // closes a dialog after save
@@ -54,20 +64,17 @@ const HelpForm = () => {
               label='Apuna'
               fullWidth
               sx={{ mt: 2 }}
-              value={task}
-              onChange={event => setTask(event.target.value)}
               style={{ marginBottom: '20px' }}
+              {...task}
             />
 
             {/* Papua -field */}
             <TextField
               label='Papua'
-              type='number'
               fullWidth
-              value={beans}
-              onChange={event => setBeans(event.target.value)}
               min='0'
               style={{ marginBottom: '20px' }}
+              {...beans}
             />
 
             {/* Tarkempi kuvaus -field */}
@@ -76,9 +83,8 @@ const HelpForm = () => {
               multiline
               rows={4}
               fullWidth
-              value={description}
-              onChange={event => setDescription(event.target.value)}
               style={{ marginBottom: '20px' }}
+              {...description}
             />
           </form>
         </DialogContent>
