@@ -15,7 +15,7 @@ import { useDispatch } from 'react-redux'
 import { appendHelp } from '../../reducers/helpReducer'
 
 
-const HelpForm = () => {
+const NewHelpForm = () => {
   const task = useField('text')
   const description = useField('text')
   const beans = useField('number')
@@ -39,9 +39,9 @@ const HelpForm = () => {
   const addHelp = async (event) => {
     event.preventDefault()
     const newHelp = {
-      task: task.value,
-      beans: beans.value,
-      description: description.value || 'ei tarkempaa kuvausta',
+      task: task.fields.value,
+      beans: beans.fields.value,
+      description: description.fields.value || 'ei tarkempaa kuvausta',
     }
     dispatch(appendHelp(newHelp))
     handleClose()  // closes a dialog after save
@@ -58,35 +58,33 @@ const HelpForm = () => {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Lisätään uusi apu</DialogTitle>
         <DialogContent>
-          <form onSubmit={addHelp}>
-            {/* Apuna -field*/}
-            <TextField
-              label='Apuna'
-              fullWidth
-              sx={{ mt: 2 }}
-              style={{ marginBottom: '20px' }}
-              {...task}
-            />
+          {/* Apuna -field*/}
+          <TextField
+            label='Apuna'
+            fullWidth
+            sx={{ mt: 2 }}
+            style={{ marginBottom: '20px' }}
+            {...task.fields}
+          />
 
-            {/* Papua -field */}
-            <TextField
-              label='Papua'
-              fullWidth
-              min='0'
-              style={{ marginBottom: '20px' }}
-              {...beans}
-            />
+          {/* Papua -field */}
+          <TextField
+            label='Papua'
+            fullWidth
+            min='0'
+            style={{ marginBottom: '20px' }}
+            {...beans.fields}
+          />
 
-            {/* Tarkempi kuvaus -field */}
-            <TextField
-              label='Tarkempi kuvaus'
-              multiline
-              rows={4}
-              fullWidth
-              style={{ marginBottom: '20px' }}
-              {...description}
-            />
-          </form>
+          {/* Tarkempi kuvaus -field */}
+          <TextField
+            label='Tarkempi kuvaus'
+            multiline
+            rows={4}
+            fullWidth
+            style={{ marginBottom: '20px' }}
+            {...description.fields}
+          />
         </DialogContent>
 
         <DialogActions>
@@ -105,5 +103,5 @@ const HelpForm = () => {
   )
 }
 
-export default HelpForm
+export default NewHelpForm
 

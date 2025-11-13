@@ -13,7 +13,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff'
 
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { loginUser } from '../reducers/userReducer'
+import { loginUser } from '../../reducers/userReducer'
 
 const LoginForm = ({ setOpenLogin, openLogin }) => {
   const [showPassword, setShowPassword] = useState(false)

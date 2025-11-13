@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-import HelpForm from './HelpForm'
+import NewHelpForm from './NewHelpForm'
 import HelpList from './HelpList'
 
 const HelpHomePage = () => {
@@ -9,7 +9,7 @@ const HelpHomePage = () => {
     <>
       {user && (
         <>
-          <HelpForm />
+          <NewHelpForm />
           <h3>Tarjoan apua näihin askareisiin:</h3>
           <HelpList filter={h => h.user.id === user.id} />
         </>

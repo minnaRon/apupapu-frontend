@@ -6,21 +6,23 @@ import { useState } from 'react'
  *        <input  {...name} />
  *        name.reset()
 */
-const useField = (type = 'text') => {
-  const [value, setValue] = useState('')
+const useField = (type = 'text', initialValue = '') => {
+  const [value, setValue] = useState(initialValue)
 
   const onChange = (event) => {
     setValue(event.target.value)
   }
 
   const reset = () => {
-    setValue('')
+    setValue(initialValue)
   }
 
   return {
-    type,
-    value,
-    onChange,
+    fields: {
+      type,
+      value,
+      onChange,
+    },
     reset
   }
 }

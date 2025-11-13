@@ -10,13 +10,13 @@ import {
 } from '@mui/material'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
-import EditNoteIcon from '@mui/icons-material/EditNote'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import LiveHelpOutlinedIcon from '@mui/icons-material/LiveHelpOutlined'
 
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { removeHelp } from '../../reducers/helpReducer'
+import EditHelpForm from './EditHelpForm'
 
 const Help = ({ help }) => {
   const [open, setOpen] = useState(false)
@@ -29,16 +29,17 @@ const Help = ({ help }) => {
     }
   }
 
-  //TEE avun muokkaukseen funktio tähän
-  const handleEdit = () => { }
-
   //TEE navigoi käyttäjien viestittelyyn tässä tai jsx -koodissa
   const handleAsk = () => {}
 
   return (
     <>
-      <TableRow className='help' sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+      <TableRow
+        className='help'
+        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+      >
         <TableCell>
+          {/** arrowIcon is active if user is logged in */}
           <IconButton
             disabled={!user}
             aria-label='expand row'
@@ -49,25 +50,23 @@ const Help = ({ help }) => {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell component='th' scope='row'>
-          {help.task}
-        </TableCell>
-        <TableCell align='right'>{help.beans}</TableCell>
+        {/** everyone sees help tasks tittles and beans */}
+        <TableCell component='th' scope='row' >{help.task}</TableCell>
+        <TableCell align='right' >{help.beans}</TableCell>
       </TableRow>
+      {/** user logged in */}
       {user &&
         <TableRow>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
             <Collapse in={open} timeout='auto' unmountOnExit>
-              <Typography
-                variant='body2'
-                sx={{
-                  maxWidth: 400,
-                  wordWrap: 'break-word',
-                  p: 1,
-                }}
-              >
-                {help.helper}: {help.description}
+              <Typography variant='subtitle1' sx={{ maxWidth: 400, wordWrap: 'break-word', p: 1, pb: 0 }}>
+                {help.helper}:
               </Typography>
+              <Typography variant='body2' sx={{ maxWidth: 400, wordWrap: 'break-word', p: 1, pt:0, mb: 2 }}>
+                {help.description}
+              </Typography>
+              {/** if user same as helper: shows edit and delete -buttons */}
+              {/** if user not same as helper: shows ask more -button */}
               {
                 user && user.id === help.helperId
                   ? <Box
@@ -83,18 +82,25 @@ const Help = ({ help }) => {
                       }
                     }}
                   >
-                    <ButtonGroup variant='contained' aria-label='Basic button group'>
-                      <IconButton aria-label='delete' size='small' onClick={handleDelete}>
+                    <ButtonGroup
+                      variant='contained'
+                      aria-label='Basic button group'
+                      style={{ display: 'flex', alignItems: 'center' }}>
+                      <IconButton
+                        aria-label='delete'
+                        size='small'
+                        onClick={handleDelete}>
                         <DeleteOutlineIcon />POISTA
                       </IconButton>
-
-                      <IconButton aria-label='edit-button' color='success' size='small' variant='contained' onClick={handleEdit}>
-                        <EditNoteIcon />MUOKKAA
-                      </IconButton>
+                      <EditHelpForm help={help} />
                     </ButtonGroup>
                   </Box>
                   :
-                  <Button variant='contained' fullwidth='true' color='success' onClick={handleAsk} >
+                  <Button
+                    variant='contained'
+                    fullwidth='true'
+                    color='success'
+                    onClick={handleAsk} >
                     <LiveHelpOutlinedIcon /> KYSY LISÄÄ ja SOVI AVUSTA
                   </Button>
               }

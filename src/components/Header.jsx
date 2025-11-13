@@ -16,8 +16,9 @@ import MenuIcon from '@mui/icons-material/Menu'
 
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { logoutUser } from '../reducers/userReducer'
-import LoginForm from './LoginForm'
+import LoginForm from './user/LoginForm'
 
 const Header = () => {
   const [openLogin, setOpenLogin] = useState(false)
@@ -25,6 +26,7 @@ const Header = () => {
   const [anchorElUser, setAnchorElUser] = useState(null)
   const user = useSelector(state => state.user)
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   let name
 
   if (user.user) {
@@ -36,8 +38,12 @@ const Header = () => {
   }
 
   /** content of menus */
-  const pages = ['apu', 'lainaus']
   const settings = [name, 'asetukset', 'kirjaudu ulos']
+  const pages = [
+    { name: 'esittely', path: '/info' },
+    { name: 'apu', path: '/helps' },
+    { name: 'lainaus', path: '/lends' },
+  ]
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget)
@@ -55,6 +61,8 @@ const Header = () => {
     setAnchorElUser(null)
     if (setting === 'kirjaudu ulos') {
       handleLogOut()
+    } else if (setting === 'asetukset') {
+      navigate('/user/settings')
     }
   }
 
@@ -109,8 +117,14 @@ const Header = () => {
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
+                <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                  <NavLink to={page.path} style={({ isActive }) => ({
+                    color: isActive ? 'green' : 'black',
+                    fontWeight: isActive ? 'bold' : 'normal',
+                    textDecoration: 'none',
+                  })}
+                  >{page.name}
+                  </NavLink>
                 </MenuItem>
               ))}
             </Menu>
@@ -136,11 +150,17 @@ const Header = () => {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
-                key={page}
+                key={page.name}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page}
+                <NavLink to={page.path} style={({ isActive }) => ({
+                  color: 'white',
+                  fontWeight: isActive ? 'bold' : 'normal',
+                  textDecoration: isActive ? '' : 'none',
+                })} >
+                  {page.name}
+                </NavLink>
               </Button>
             ))}
           </Box>

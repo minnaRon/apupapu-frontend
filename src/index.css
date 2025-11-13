@@ -1,13 +1,20 @@
 h1 {
   color: rgb(69, 145, 69);
 }
+
+h2 {
+  color: rgb(69, 145, 69);
+}
+
 h3 {
   color: rgb(69, 145, 69);
 }
+
 button {
   background-color: rgb(69, 145, 69);
   color: white;
 }
+
 .help {
   color: grey;
   padding-top: 5px;

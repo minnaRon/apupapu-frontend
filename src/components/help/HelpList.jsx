@@ -54,7 +54,11 @@ const HelpList = ({ filter = null }) => {
   return (
     <Paper>
       <TableContainer component={Paper}>
-        <Table stickyHeader aria-label='sticky table' sx={{ minWidth: 250 }} size='small' >
+        <Table
+          stickyHeader
+          aria-label='sticky table'
+          sx={{ minWidth: 250 }}
+          size='small' >
           <TableHead>
             <TableRow>
               <TableCell align='left' >kuvaus</TableCell>
@@ -77,6 +81,7 @@ const HelpList = ({ filter = null }) => {
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        labelRowsPerPage='Rivejä sivulla:'
       />
     </Paper>
   )
