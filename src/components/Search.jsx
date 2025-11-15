@@ -36,7 +36,7 @@ const Search = () => {
   return (
     <div>
       {!isSearchVisible &&<>
-        < IconButton onClick={toggleSearch} color='success'>
+        < IconButton onClick={toggleSearch} color='info'>
           <SearchIcon />ETSI
         </IconButton>
       </>
@@ -53,7 +53,7 @@ const Search = () => {
             endAdornment: (
               <>
                 <InputAdornment position="start">
-                  <IconButton  onClick={toggleSearch}>
+                  <IconButton  color='info' onClick={toggleSearch}>
                     <SearchIcon />
                   </IconButton>
                 </InputAdornment>

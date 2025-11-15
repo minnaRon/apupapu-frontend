@@ -38,28 +38,39 @@ const Help = ({ help }) => {
     <>
       <TableRow
         className='help'
-        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+        sx={{
+          '& td, & th': {
+            fontSize: open ? '20px' : '',
+            color: open ? ' #f8f9fdff' : '',
+            fontWeight: open ? 'bold' : '',
+            backgroundColor: open ? '#3B82F6' : '',
+          },
+          '&:last-child td, &:last-child th': { border: 0 }
+        }}
       >
         <TableCell>
           {/** arrowIcon is active if user is logged in */}
           <IconButton
             disabled={!user}
             aria-label='expand row'
-            color='success'
             size='small'
             onClick={() => setOpen(!open)}
+            sx={{
+              color: open ? ' #f8f9fdff' : '',
+              backgroundColor: open ? '#3B82F6' : ''
+            }}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
         {/** everyone sees help task tittles and beans */}
-        <TableCell component='th' scope='row' >{help.task}</TableCell>
-        <TableCell align='right' >{help.beans}</TableCell>
+        <TableCell component='th' scope='row'>{help.task}</TableCell>
+        <TableCell align='right'>{help.beans}</TableCell>
       </TableRow>
       {/** user logged in */}
       {user &&
         <TableRow>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} sx={{ backgroundColor: '#c8e1f1ff' }} colSpan={6} >
             <Collapse in={open} timeout='auto' unmountOnExit>
               <Typography variant='subtitle1' sx={{ maxWidth: 400, wordWrap: 'break-word', p: 1, pb: 0 }}>
                 {help.notifier}:
@@ -99,11 +110,11 @@ const Help = ({ help }) => {
                   </Box>
                   :
                   <Button
-                    variant='contained'
-                    fullwidth='true'
-                    color='success'
+                    variant='outlined'
+                    fullWidth
+                    color='info'
                     onClick={handleAsk} >
-                    <LiveHelpOutlinedIcon /> KYSY LISÄÄ ja SOVI AVUSTA
+                    <LiveHelpOutlinedIcon sx={{ marginRight: 1 }}/> KYSY LISÄÄ ja SOVI AVUSTA
                   </Button>
               }
             </Collapse>

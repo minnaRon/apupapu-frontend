@@ -1,15 +1,16 @@
 const Footer = () => {
   const footerStyle = {
-    color: 'green',
+    color: '#1976d2',
     fontStyle: 'italic',
-    fontSize: 20
+    fontSize: 20,
+    textAlign: 'center'
   }
 
   return (
     <div style={footerStyle}>
       <br />
       <p>
-        Apuja ja papuja kaikelle kansalle vuodesta 2025
+        Apuja & papuja kaikelle kansalle alkaen vuodesta 2025
       </p>
     </div>
   )

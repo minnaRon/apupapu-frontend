@@ -51,7 +51,7 @@ const AskHelpForm = () => {
   return (
     <div>
       {/* pressing the button opens a dialog */}
-      <IconButton variant='outlined' color='success' onClick={handleClickOpen}>
+      <IconButton variant='outlined' color='info' onClick={handleClickOpen}>
         <LiveHelpOutlinedIcon />KYSY
       </IconButton>
 

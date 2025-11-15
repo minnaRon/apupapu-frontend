@@ -68,7 +68,9 @@ const Header = () => {
 
   return (
     <AppBar position='static'>
-      <Container maxWidth='xl'>
+      <Container maxWidth='xl'   sx={{
+        background: 'linear-gradient(to top right, #3B82F6, #eef1f3ff',
+      }}>
         <Toolbar disableGutters>
           <Typography
             variant='h6'
@@ -85,7 +87,7 @@ const Header = () => {
               textDecoration: 'none',
             }}
           >
-            apu&papu
+            apunapapu
           </Typography>
 
           {/* navmenu */}
@@ -119,7 +121,7 @@ const Header = () => {
               {pages.map((page) => (
                 <MenuItem key={page.name} onClick={handleCloseNavMenu}>
                   <NavLink to={page.path} style={({ isActive }) => ({
-                    color: isActive ? 'green' : 'black',
+                    color: isActive ? 'blue' : 'black',
                     fontWeight: isActive ? 'bold' : 'normal',
                     textDecoration: 'none',
                   })}
@@ -145,7 +147,7 @@ const Header = () => {
               textDecoration: 'none',
             }}
           >
-            apu&papu
+            apunapapu
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
@@ -175,7 +177,7 @@ const Header = () => {
               : <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title='Open settings'>
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar sx={{ bgcolor: 'blue' }}>
+                    <Avatar sx={{ bgcolor:  '#3B82F6' }}>
                       {(name.split('')[0].toUpperCase())}
                     </Avatar>
                   </IconButton>

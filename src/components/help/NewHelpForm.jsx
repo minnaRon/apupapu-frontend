@@ -14,7 +14,6 @@ import useField from '../../hooks/useField'
 import { useDispatch } from 'react-redux'
 import { appendHelp } from '../../reducers/helpReducer'
 
-
 const NewHelpForm = () => {
   const task = useField('text')
   const description = useField('text')
@@ -50,13 +49,13 @@ const NewHelpForm = () => {
   return (
     <div>
       {/* pressing the button opens a dialog */}
-      <IconButton variant='outlined' color='success' onClick={handleClickOpen}>
+      <IconButton variant='outlined' color='info' onClick={handleClickOpen}>
         <AddTaskOutlinedIcon />LISÄÄ
       </IconButton>
 
       {/* dialog-view */}
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Lisätään uusi apu</DialogTitle>
+        <DialogTitle >Lisätään uusi apu</DialogTitle>
         <DialogContent>
           {/* Apuna -field*/}
           <TextField

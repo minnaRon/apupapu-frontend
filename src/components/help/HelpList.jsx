@@ -73,7 +73,7 @@ const HelpList = ({ filter = null }) => {
           size='small' >
           <TableHead>
             <TableRow>
-              <TableCell align='left' >kuvaus</TableCell>
+              <TableCell align='left'>kuvaus</TableCell>
               <TableCell align='left'>askare</TableCell>
               <TableCell align='right'>papua</TableCell>
             </TableRow>
@@ -94,6 +94,7 @@ const HelpList = ({ filter = null }) => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
         labelRowsPerPage='Rivejä sivulla:'
+        sx={{ color: '#3573d6ff' }}
       />
     </Paper>
   )

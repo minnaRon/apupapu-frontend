@@ -1,3 +1,3 @@
-const AppInfo = () => <h2>sovelluksen esittely tänne</h2>
+const AppInfo = () => <h2>👷‍♀️👷 🚧 ..työn alla: sovelluksen esittely</h2>
 
 export default AppInfo

@@ -51,7 +51,7 @@ const EditHelpForm = ({ help }) => {
   return (
     <div>
       {/* pressing the button opens a dialog */}
-      <IconButton variant='outlined' size='small' color='success' onClick={handleClickOpen}>
+      <IconButton variant='outlined' size='small' sx={{ color: '#3B82F6' }}  onClick={handleClickOpen}>
         <EditNoteIcon />MUOKKAA
       </IconButton>
 
