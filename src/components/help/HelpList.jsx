@@ -9,33 +9,45 @@ import {
   TablePagination
 } from '@mui/material'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import Help from './Help'
 
 const HelpList = ({ filter = null }) => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [createdDataHelps, setCreatedDataHelps] = useState([])
 
   const { helps } = useSelector(state => state.helps)
-  if (!helps || helps.length === 0) return null
+  const filterFromStore = useSelector(state => state.filter)
 
   const createData = ( h ) => {
     return {
       id: h.id,
       task: h.task,
       beans: h.beans,
-      helper: h.user.name,
-      helperId: h.user.id,
+      notifier: h.user.name,
+      notifierId: h.user.id,
       description: h.description,
+      asking: h.asking || false
     }
   }
 
   /** creates filtered and sorted data for a table */
-  const createdDataHelps = helps
-    .filter(filter || (() => true))
-    .sort((a, b) => a.task.localeCompare(b.task))
-    .map(h => createData(h))
+  useEffect(() => {
+    const createdData = helps
+      .filter(filter || (() => true))
+      .filter(h => (
+        filterFromStore
+          ? h.task.toLowerCase().includes(filterFromStore)
+          : true
+      ))
+      .sort((a, b) => a.task.localeCompare(b.task))
+      .map(h => createData(h))
+    setCreatedDataHelps(createdData)
+  }, [helps, filter, filterFromStore])
+
+  if (!helps || helps.length === 0) return null
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)

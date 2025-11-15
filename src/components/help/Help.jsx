@@ -23,6 +23,8 @@ const Help = ({ help }) => {
   const user = useSelector(state => state.user.user)
   const dispatch = useDispatch()
 
+  const userIsNotifier = user && user.id === help.notifierId
+
   const handleDelete = () => {
     if (window.confirm(`Poistetaanko ${help.task}?`)) {
       dispatch(removeHelp(help.id))
@@ -50,7 +52,7 @@ const Help = ({ help }) => {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        {/** everyone sees help tasks tittles and beans */}
+        {/** everyone sees help task tittles and beans */}
         <TableCell component='th' scope='row' >{help.task}</TableCell>
         <TableCell align='right' >{help.beans}</TableCell>
       </TableRow>
@@ -60,15 +62,15 @@ const Help = ({ help }) => {
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
             <Collapse in={open} timeout='auto' unmountOnExit>
               <Typography variant='subtitle1' sx={{ maxWidth: 400, wordWrap: 'break-word', p: 1, pb: 0 }}>
-                {help.helper}:
+                {help.notifier}:
               </Typography>
               <Typography variant='body2' sx={{ maxWidth: 400, wordWrap: 'break-word', p: 1, pt:0, mb: 2 }}>
                 {help.description}
               </Typography>
-              {/** if user same as helper: shows edit and delete -buttons */}
-              {/** if user not same as helper: shows ask more -button */}
+              {/** if user is notifier: shows edit and delete -buttons */}
+              {/** if user is not notifier: shows ask more -button */}
               {
-                user && user.id === help.helperId
+                user && userIsNotifier
                   ? <Box
                     sx={{
                       display: 'flex',

@@ -7,7 +7,7 @@ import {
   Button,
   IconButton
 } from '@mui/material'
-import AddTaskOutlinedIcon from '@mui/icons-material/AddTaskOutlined'
+import LiveHelpOutlinedIcon from '@mui/icons-material/LiveHelpOutlined'
 
 import { useState } from 'react'
 import useField from '../../hooks/useField'
@@ -15,7 +15,7 @@ import { useDispatch } from 'react-redux'
 import { appendHelp } from '../../reducers/helpReducer'
 
 
-const NewHelpForm = () => {
+const AskHelpForm = () => {
   const task = useField('text')
   const description = useField('text')
   const beans = useField('number')
@@ -42,6 +42,7 @@ const NewHelpForm = () => {
       task: task.fields.value,
       beans: beans.fields.value,
       description: description.fields.value || 'ei tarkempaa kuvausta',
+      asking: true
     }
     dispatch(appendHelp(newHelp))
     handleClose()  // closes a dialog after save
@@ -51,16 +52,16 @@ const NewHelpForm = () => {
     <div>
       {/* pressing the button opens a dialog */}
       <IconButton variant='outlined' color='success' onClick={handleClickOpen}>
-        <AddTaskOutlinedIcon />LISÄÄ
+        <LiveHelpOutlinedIcon />KYSY
       </IconButton>
 
       {/* dialog-view */}
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Lisätään uusi apu</DialogTitle>
+        <DialogTitle>Kysytään apua</DialogTitle>
         <DialogContent>
           {/* Apuna -field*/}
           <TextField
-            label='Apuna'
+            label='Apu'
             fullWidth
             sx={{ mt: 2 }}
             style={{ marginBottom: '20px' }}
@@ -69,7 +70,7 @@ const NewHelpForm = () => {
 
           {/* Papua -field */}
           <TextField
-            label='Papua'
+            label='Papu arvio'
             fullWidth
             min='0'
             style={{ marginBottom: '20px' }}
@@ -103,5 +104,5 @@ const NewHelpForm = () => {
   )
 }
 
-export default NewHelpForm
+export default AskHelpForm
 
