@@ -35,6 +35,7 @@ const Header = () => {
 
   const handleLogOut = () => {
     dispatch(logoutUser())
+    navigate('/')
   }
 
   /** content of menus */
