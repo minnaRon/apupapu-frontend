@@ -10,7 +10,7 @@ import loginService from '../services/login'
 import userService from '../services/user'
 
 const initialState = {
-  user: null,
+  user: userService.getUser(),
   loading: false,
   error: null
 }
