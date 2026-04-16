@@ -39,7 +39,7 @@ const HelpList = ({ filter = null }) => {
       .filter(filter || (() => true))
       .filter(h => (
         filterFromStore
-          ? h.task.toLowerCase().includes(filterFromStore)
+          ? h.task.toLowerCase().includes((filterFromStore || '').toLowerCase())
           : true
       ))
       .sort((a, b) => a.task.localeCompare(b.task))
