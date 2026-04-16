@@ -6,27 +6,37 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Box } from '@mui/material'
 
 import { useState, useEffect }from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import NewHelpForm from './NewHelpForm'
 import AskHelpForm from './AskHelpForm'
 import HelpList from './HelpList'
 import Search from '../Search'
+import AgreementList from '../agreement/AgreementList'
+import { initializeAgreements } from '../../reducers/agreementReducer'
 
-const HelpHomePage = () => {
+const HelpMain = () => {
+  const [expanded, setExpanded] = useState('panel3')
+
   const user = useSelector(state => state.user.user)
-  const [expanded, setExpanded] = useState('panel4')
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    user
-      ? setExpanded('panel1')
-      : setExpanded('panel4')
-  }, [user])
+    if (user) {
+      setExpanded('panel1')
+      dispatch(initializeAgreements())
+    }
+    setExpanded('panel3')
+  }, [user, dispatch])
+
+  //DEV console.log TARKISTUS agreements
+  //const agreements = useSelector(state => state.agreements.agreements)
+  //console.log('homepage agreement initializeAgreements', agreements)
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false)
   }
 
-  const isExpanded = ['panel1', 'panel2', 'panel3', 'panel4'].reduce((acc, panel) => {
+  const isExpanded = ['panel0', 'panel1', 'panel2', 'panel3', 'panel4'].reduce((acc, panel) => {
     acc[panel] = expanded === panel
     return acc
   }, {})
@@ -48,9 +58,33 @@ const HelpHomePage = () => {
             <AskHelpForm />
             <Search align='right'/>
           </Box>
-          <Accordion expanded={isExpanded.panel1} onChange={handleChange('panel1')}>
+          <Accordion expanded={isExpanded.panel0} onChange={handleChange('panel0')}>
 
-            {/** user offers help */}
+            {/** agreements */}
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon sx={{
+                color: isExpanded.panel0 ? ' #f8f9fdff' : '#3B82F6',
+                backgroundColor: isExpanded.panel0 ? '#3B82F6' : 'white'
+              }}
+              />}
+              aria-controls='panel0bh-content'
+              id='panel0bh-header'
+              sx={getAccordionSummaryStyles('panel0')}
+            >
+              <Typography component='span' sx={{ width: '33%', flexShrink: 0 }}>
+                🤝
+              </Typography>
+              <Typography component='span'>
+                tapahtumat
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails sx={{ padding: 0, margin: 0, width: '100%' }}>
+              <AgreementList />
+            </AccordionDetails>
+          </Accordion>
+
+          {/** user offers help */}
+          <Accordion expanded={isExpanded.panel1} onChange={handleChange('panel1')}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon sx={{
                 color: isExpanded.panel1 ? ' #f8f9fdff' : '#3B82F6',
@@ -99,7 +133,7 @@ const HelpHomePage = () => {
         </>
       )}
 
-      {/** all requests for help */}
+      {/** all offers for help */}
       <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon sx={{
@@ -112,30 +146,6 @@ const HelpHomePage = () => {
           sx={getAccordionSummaryStyles('panel3')}
         >
           <Typography component='span' sx={{ width: '33%', flexShrink: 0 }}>
-            KYSYTÄÄN
-          </Typography>
-          <Typography component='span'>
-            Kysytään apua näihin askareisiin
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails sx={{ padding: 0, margin: 0, width: '100%' }}>
-          <HelpList filter={h => h.asking} />
-        </AccordionDetails>
-      </Accordion>
-
-      {/** all offers for help */}
-      <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon sx={{
-            color: isExpanded.panel4 ? ' #f8f9fdff' : '#3B82F6',
-            backgroundColor: isExpanded.panel4 ? '#3B82F6' : 'white'
-          }}
-          />}
-          aria-controls='panel4bh-content'
-          id='panel3bh-header'
-          sx={getAccordionSummaryStyles('panel4')}
-        >
-          <Typography component='span' sx={{ width: '33%', flexShrink: 0 }}>
             TARJOTAAN
           </Typography>
           <Typography component='span' >
@@ -146,8 +156,32 @@ const HelpHomePage = () => {
           <HelpList filter={h => !h.asking}/>
         </AccordionDetails>
       </Accordion>
+
+      {/** all requests for help */}
+      <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon sx={{
+            color: isExpanded.panel4 ? ' #f8f9fdff' : '#3B82F6',
+            backgroundColor: isExpanded.panel4 ? '#3B82F6' : 'white'
+          }}
+          />}
+          aria-controls='panel4bh-content'
+          id='panel4bh-header'
+          sx={getAccordionSummaryStyles('panel4')}
+        >
+          <Typography component='span' sx={{ width: '33%', flexShrink: 0 }}>
+            KYSYTÄÄN
+          </Typography>
+          <Typography component='span'>
+            Kysytään apua näihin askareisiin
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails sx={{ padding: 0, margin: 0, width: '100%' }}>
+          <HelpList filter={h => h.asking} />
+        </AccordionDetails>
+      </Accordion>
     </>
   )
 }
 
-export default HelpHomePage
+export default HelpMain

@@ -5,7 +5,7 @@ import { Container } from '@mui/material'
 import Notification from './components/Notification'
 import AppInfo from './components/AppInfo'
 import Header from './components/Header'
-import HelpHomePage from './components/help/HelpHomePage'
+import HelpMain from './components/help/HelpMain'
 import LendHomePage from './components/lend/LendHomePage'
 import Footer from './components/Footer'
 import { setUserFromStorage } from './reducers/userReducer'
@@ -30,11 +30,11 @@ const App = () => {
         window.removeEventListener('beforeunload', handleBeforeUnload)
       }
     }
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     dispatch(setUserFromStorage())
-  }, [])
+  }, [dispatch])
 
   return (
     <Container>
@@ -44,7 +44,7 @@ const App = () => {
       <Routes>
         <Route path='/' element={<Navigate to='/helps' />} />
         <Route path='/info' element={<AppInfo />} />
-        <Route path='/helps' element={<HelpHomePage />} />
+        <Route path='/helps' element={<HelpMain />} />
         <Route path='/lends' element={<LendHomePage />} />
         <Route path='/user/settings' element={<UserSettingsForm />} />
       </Routes>

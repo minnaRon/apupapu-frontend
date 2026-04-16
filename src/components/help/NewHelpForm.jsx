@@ -35,7 +35,7 @@ const NewHelpForm = () => {
     beans.reset()
   }
 
-  const addHelp = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     const newHelp = {
       task: task.fields.value,
@@ -47,58 +47,61 @@ const NewHelpForm = () => {
   }
 
   return (
-    <div>
+    <>
       {/* pressing the button opens a dialog */}
       <IconButton variant='outlined' color='info' onClick={handleClickOpen}>
-        <AddTaskOutlinedIcon />LISÄÄ
+        <AddTaskOutlinedIcon />TARJOA
       </IconButton>
 
       {/* dialog-view */}
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle >Lisätään uusi apu</DialogTitle>
+        <DialogTitle >Tarjotaan uusi apu</DialogTitle>
         <DialogContent>
-          {/* Apuna -field*/}
-          <TextField
-            label='Apuna'
-            fullWidth
-            sx={{ mt: 2 }}
-            style={{ marginBottom: '20px' }}
-            {...task.fields}
-          />
+          <form onSubmit={handleSubmit} id='newHelp-form'>
 
-          {/* Papua -field */}
-          <TextField
-            label='Papua'
-            fullWidth
-            min='0'
-            style={{ marginBottom: '20px' }}
-            {...beans.fields}
-          />
+            {/* Apuna -field*/}
+            <TextField
+              label='otsikko, esim. kitaransoiton opetusta'
+              fullWidth
+              sx={{ mt: 2 }}
+              style={{ marginBottom: '20px' }}
+              {...task.fields}
+            />
 
-          {/* Tarkempi kuvaus -field */}
-          <TextField
-            label='Tarkempi kuvaus'
-            multiline
-            rows={4}
-            fullWidth
-            style={{ marginBottom: '20px' }}
-            {...description.fields}
-          />
+            {/* Papua -field */}
+            <TextField
+              label='papujen määrä (tehtävä/tuntikohtainen)'
+              fullWidth
+              min='0'
+              style={{ marginBottom: '20px' }}
+              {...beans.fields}
+            />
+
+            {/* Tarkempi kuvaus -field */}
+            <TextField
+              label='tarkempi kuvaus tarjoamastasi avusta'
+              multiline
+              rows={4}
+              fullWidth
+              style={{ marginBottom: '20px' }}
+              {...description.fields}
+            />
+          </form>
         </DialogContent>
-
         <DialogActions>
+
           {/* cancel button closes a dialog */}
           <Button onClick={handleClose} color='secondary'>
             Peruuta
           </Button>
 
           {/* save button to save and close a dialog*/}
-          <Button onClick={addHelp} color='primary'>
+          <Button type='submit' form='newHelp-form' color='primary'>
             Tallenna
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   )
 }
 

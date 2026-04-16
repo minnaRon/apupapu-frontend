@@ -36,7 +36,7 @@ const AskHelpForm = () => {
     beans.reset()
   }
 
-  const addHelp = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     const newHelp = {
       task: task.fields.value,
@@ -59,35 +59,37 @@ const AskHelpForm = () => {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Kysytään apua</DialogTitle>
         <DialogContent>
-          {/* Apuna -field*/}
-          <TextField
-            label='Apu'
-            fullWidth
-            sx={{ mt: 2 }}
-            style={{ marginBottom: '20px' }}
-            {...task.fields}
-          />
+          <form onSubmit={handleSubmit} id='askHelp-form'>
 
-          {/* Papua -field */}
-          <TextField
-            label='Papu arvio'
-            fullWidth
-            min='0'
-            style={{ marginBottom: '20px' }}
-            {...beans.fields}
-          />
+            {/* Apuna -field*/}
+            <TextField
+              label='otsikko, esim. kitaransoiton opetusta'
+              fullWidth
+              sx={{ mt: 2 }}
+              style={{ marginBottom: '20px' }}
+              {...task.fields}
+            />
 
-          {/* Tarkempi kuvaus -field */}
-          <TextField
-            label='Tarkempi kuvaus'
-            multiline
-            rows={4}
-            fullWidth
-            style={{ marginBottom: '20px' }}
-            {...description.fields}
-          />
+            {/* Papua -field */}
+            <TextField
+              label='papujen määrä (tehtävä/tuntikohtainen)'
+              fullWidth
+              min='0'
+              style={{ marginBottom: '20px' }}
+              {...beans.fields}
+            />
+
+            {/* Tarkempi kuvaus -field */}
+            <TextField
+              label='tarkempi kuvaus kysymästäsi avusta'
+              multiline
+              rows={4}
+              fullWidth
+              style={{ marginBottom: '20px' }}
+              {...description.fields}
+            />
+          </form>
         </DialogContent>
-
         <DialogActions>
           {/* cancel button closes a dialog */}
           <Button onClick={handleClose} color='secondary'>
@@ -95,7 +97,7 @@ const AskHelpForm = () => {
           </Button>
 
           {/* save button to save and close a dialog*/}
-          <Button onClick={addHelp} color='primary'>
+          <Button type='submit' form='askHelp-form' color='primary'>
             Tallenna
           </Button>
         </DialogActions>

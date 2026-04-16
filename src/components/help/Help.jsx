@@ -5,18 +5,17 @@ import {
   Collapse,
   IconButton,
   Typography,
-  Button,
   Box
 } from '@mui/material'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
-import LiveHelpOutlinedIcon from '@mui/icons-material/LiveHelpOutlined'
 
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { removeHelp } from '../../reducers/helpReducer'
 import EditHelpForm from './EditHelpForm'
+import ContactMain from '../contact/ContactMain'
 
 const Help = ({ help }) => {
   const [open, setOpen] = useState(false)
@@ -30,9 +29,6 @@ const Help = ({ help }) => {
       dispatch(removeHelp(help.id))
     }
   }
-
-  //TEE navigoi käyttäjien viestittelyyn tässä tai jsx -koodissa
-  const handleAsk = () => {}
 
   return (
     <>
@@ -109,13 +105,7 @@ const Help = ({ help }) => {
                     </ButtonGroup>
                   </Box>
                   :
-                  <Button
-                    variant='outlined'
-                    fullWidth
-                    color='info'
-                    onClick={handleAsk} >
-                    <LiveHelpOutlinedIcon sx={{ marginRight: 1 }}/> KYSY LISÄÄ ja SOVI AVUSTA
-                  </Button>
+                  <ContactMain help={help} />
               }
             </Collapse>
           </TableCell>

@@ -36,7 +36,7 @@ const EditHelpForm = ({ help }) => {
     beans.reset()
   }
 
-  const editHelp = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     const editedHelp = {
       ...help,
@@ -59,33 +59,36 @@ const EditHelpForm = ({ help }) => {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Muokataan apua</DialogTitle>
         <DialogContent>
-          {/* Apuna -field*/}
-          <TextField
-            label='Apuna'
-            fullWidth
-            sx={{ mt: 2 }}
-            style={{ marginBottom: '20px' }}
-            {...task.fields}
-          />
+          <form onSubmit={handleSubmit} id='editHelp-form'>
 
-          {/* Papua -field */}
-          <TextField
-            label='Papua'
-            fullWidth
-            min='0'
-            style={{ marginBottom: '20px' }}
-            {...beans.fields}
-          />
+            {/* otsikko -field*/}
+            <TextField
+              label='otsikko'
+              fullWidth
+              sx={{ mt: 2 }}
+              style={{ marginBottom: '20px' }}
+              {...task.fields}
+            />
 
-          {/* Tarkempi kuvaus -field */}
-          <TextField
-            label='Tarkempi kuvaus'
-            multiline
-            rows={4}
-            fullWidth
-            style={{ marginBottom: '20px' }}
-            {...description.fields}
-          />
+            {/* papua -field */}
+            <TextField
+              label='papua (tehtävä/tunti)'
+              fullWidth
+              min='0'
+              style={{ marginBottom: '20px' }}
+              {...beans.fields}
+            />
+
+            {/* Tarkempi kuvaus -field */}
+            <TextField
+              label='tarkempi kuvaus tarjoamastasi avusta'
+              multiline
+              rows={4}
+              fullWidth
+              style={{ marginBottom: '20px' }}
+              {...description.fields}
+            />
+          </form>
         </DialogContent>
 
         <DialogActions>
@@ -95,7 +98,7 @@ const EditHelpForm = ({ help }) => {
           </Button>
 
           {/* save button to save and close a dialog*/}
-          <Button onClick={editHelp} color='primary'>
+          <Button type='submit' form='editHelp-form' color='primary'>
             Tallenna
           </Button>
         </DialogActions>
