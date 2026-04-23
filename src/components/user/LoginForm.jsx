@@ -34,7 +34,10 @@ const LoginForm = ({ setOpenLogin, openLogin }) => {
   const handleClose = () => setOpenLogin(false)
 
   // show/hide password
-  const handleClickShowPassword = () => setShowPassword((prev) => !prev)
+  const handleClickShowPassword = (e) => {
+    e.currentTarget.blur() // 🔥 tämä fixaa warningin
+    setShowPassword(prev => !prev)
+  }
   const handleMouseDownPassword = (event) => event.preventDefault()
 
   return (
@@ -47,6 +50,7 @@ const LoginForm = ({ setOpenLogin, openLogin }) => {
       <DialogContent>
         <form onSubmit={handleLogin} id='login-form'>
           <TextField
+            autoFocus
             label='Käyttäjätunnus'
             variant='outlined'
             fullWidth

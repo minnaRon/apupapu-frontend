@@ -4,6 +4,8 @@ import helpReducer from './reducers/helpReducer'
 import userReducer from './reducers/userReducer'
 import notificationReducer from './reducers/notificationReducer'
 import filterReducer from './reducers/filterReducer'
+import eventReducer from './reducers/eventReducer'
+import commentReducer from './reducers/commentReducer'
 
 const store = configureStore({
   reducer: {
@@ -11,6 +13,8 @@ const store = configureStore({
     user: userReducer,
     notification: notificationReducer,
     filter: filterReducer,
+    events: eventReducer,
+    comments: commentReducer,
   }
 })
 

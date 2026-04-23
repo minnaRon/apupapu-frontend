@@ -11,8 +11,10 @@ import NewHelpForm from './NewHelpForm'
 import AskHelpForm from './AskHelpForm'
 import HelpList from './HelpList'
 import Search from '../Search'
-import AgreementList from '../agreement/AgreementList'
-import { initializeAgreements } from '../../reducers/agreementReducer'
+import EventList from '../event/EventList'
+import CalendarDashboard from '../calendar/CalendarDashboard'
+import CoffeeCup from './coffeeCup'
+import { initializeEvents } from '../../reducers/eventReducer'
 
 const HelpMain = () => {
   const [expanded, setExpanded] = useState('panel3')
@@ -22,15 +24,12 @@ const HelpMain = () => {
 
   useEffect(() => {
     if (user) {
-      setExpanded('panel1')
-      dispatch(initializeAgreements())
+      setExpanded('panel0')
+      dispatch(initializeEvents())
+    } else {
+      setExpanded('panel3')
     }
-    setExpanded('panel3')
   }, [user, dispatch])
-
-  //DEV console.log TARKISTUS agreements
-  //const agreements = useSelector(state => state.agreements.agreements)
-  //console.log('homepage agreement initializeAgreements', agreements)
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false)
@@ -71,15 +70,37 @@ const HelpMain = () => {
               id='panel0bh-header'
               sx={getAccordionSummaryStyles('panel0')}
             >
-              <Typography component='span' sx={{ width: '33%', flexShrink: 0 }}>
-                🤝
-              </Typography>
-              <Typography component='span'>
-                tapahtumat
+              <Box
+                sx={{
+                  width: 40,
+                  height: 40,
+                  position: 'relative',
+                  flexShrink: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  overflow: 'visible',
+                  transform: 'translateY(-4px)',
+                }}
+              >
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                >
+                  <CoffeeCup value={87} />
+                </Box>
+              </Box>
+              <Typography component='span' sx={{ pl: 5 }}>
+                Omat 🤝 tapahtumat
               </Typography>
             </AccordionSummary>
             <AccordionDetails sx={{ padding: 0, margin: 0, width: '100%' }}>
-              <AgreementList />
+              <CalendarDashboard />
+              {/* <EventList /> */}
             </AccordionDetails>
           </Accordion>
 
