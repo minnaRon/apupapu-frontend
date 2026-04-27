@@ -15,7 +15,7 @@ import useField from '../../hooks/useField'
 import { useDispatch, useSelector } from 'react-redux'
 import { appendEvent, updateEvent } from '../../reducers/eventReducer'
 import { DatePicker, TimePicker } from '@mui/x-date-pickers'
-import FeedBackSection from './FeedBackSection'
+import FeedbackSection from './FeedbackSection'
 import dayjs from 'dayjs'
 import 'dayjs/locale/fi'
 
@@ -266,7 +266,7 @@ const EventForm = ({ help, event, onClose }) => {
               </Button>
             )}
             {canComplete && (
-              <FeedBackSection
+              <FeedbackSection
                 canComplete={canComplete}
                 handleComplete={handleComplete}
               />
