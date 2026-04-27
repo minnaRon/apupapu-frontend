@@ -1,6 +1,6 @@
 //colors implementing events' status in the calendar
 export const getEventColor = (event, userId) => {
-  const isHelper = event.participants?.find(p => p.user === userId)?.role === 'helper'
+  const isHelper = event.participants?.find(p => p.user.id === userId)?.role === 'helper'
 
   if (event.status === 'peruttu') return '#bb6464'
   if (event.status === 'valmis') return '#972fd3'

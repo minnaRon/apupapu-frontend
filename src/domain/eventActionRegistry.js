@@ -4,34 +4,22 @@ export const eventActionRegistry = {
     status: 'sovittu',
   }),
 
-  complete: ({ userId, completedBy }) => {
-    const exists = completedBy?.some(p => p.user === userId)
-
-    const updated = exists
-      ? completedBy
-      : [...(completedBy || []), { user: userId }]
-
-    return {
-      completedBy: updated,
-      status: updated.length === 2 ? 'valmis' : 'sovittu'
-    }
+  complete: ({ rating, review, role }) => {
+    return { rating, review, role }
   },
+
 
   cancel: ({ reason }) => ({
     status: 'peruttu',
     addInfo: reason
   }),
 
-  updateBasics: ({ beans, date, time }) => ({
+  updateBasics: ({ beans, date, time, addInfo, otherUserId }) => ({
     beans,
     date,
     time,
     status: 'kesken',
-    completedBy: []
+    addInfo,
+    otherUserId,
   }),
-
-  review: ({ rating, review }) => ({
-    rating,
-    review
-  })
 }

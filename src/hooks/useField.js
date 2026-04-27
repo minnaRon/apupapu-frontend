@@ -1,13 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
-/**
- *  use:  import useField from '../hooks/useField'
- *        const name = useField('<type of field here')
- *        <input  {...name} />
- *        name.reset()
-*/
 const useField = (type = 'text', initialValue = '') => {
   const [value, setValue] = useState(initialValue)
+
+  // event-muutokset
+  useEffect(() => {
+    setValue(initialValue)
+  }, [initialValue])
 
   const onChange = (event) => {
     setValue(event.target.value)

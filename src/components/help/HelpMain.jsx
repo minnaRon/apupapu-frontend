@@ -23,6 +23,7 @@ const HelpMain = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
+    dispatch(initializeHelps())
     if (user) {
       setExpanded('panel0')
       dispatch(initializeEvents())
