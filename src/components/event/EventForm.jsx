@@ -39,9 +39,11 @@ const EventForm = ({ help, event, onClose }) => {
     }
   }, [event])
 
-  const notifier = help?.notifier
-  const userNotAsking = help?.notifierId === user.id && !help.asking
-  const isEdit = Boolean(event)
+  const helperParticipant = event?.participants?.find(p => p.role === 'helper')
+  const helpedParticipant = event?.participants?.find(p => p.role === 'helped')
+
+  const helperName = helperParticipant?.user?.name || help?.notifier || 'tuntematon'
+  const helpedName = helpedParticipant?.user?.name || user?.name || 'tuntematon'
 
   /** opens a dialog */
   const handleClickOpen = () => {
