@@ -2,12 +2,13 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { eventActionRegistry } from '../domain/eventActionRegistry'
 import eventService from '../services/events'
 import { notify } from './notificationReducer'
+import dayjs from 'dayjs'
 
 export const initializeEvents = createAsyncThunk(
-  'events/fetchAll',
+  'events/fetchUsers',
   async (_, { rejectWithValue }) => {
     try {
-      return await eventService.getAll()
+      return await eventService.getUsersOwn()
     } catch (err) {
       return rejectWithValue(err.message)
     }

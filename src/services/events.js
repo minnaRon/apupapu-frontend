@@ -14,8 +14,8 @@ const updateEvent = async (id, payload) => {
   return res.data
 }
 
-const getAll = async () => {
-  const res = await axios.get(baseUrl, config())
+const getUsersOwn = async () => {
+  const res = await axios.get(`${baseUrl}/usersOwn`, config())
   return res.data
 }
 
@@ -25,7 +25,7 @@ const create = async (data) => {
 }
 
 export default {
-  getAll,
+  getUsersOwn,
   create,
   updateEvent
 }
