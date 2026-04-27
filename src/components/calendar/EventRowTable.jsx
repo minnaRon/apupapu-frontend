@@ -20,6 +20,7 @@ export default function EventRowTable({
 
   const needsConfirmation =
     event.lastModifiedBy?.user?.toString() !== user.id?.toString()
+  && event.completedBy.length < 2
 
   return (
     <Paper

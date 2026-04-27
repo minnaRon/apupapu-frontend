@@ -101,29 +101,41 @@ const EventForm = ({ help, event, onClose }) => {
     handleClose()
   }
 
-  const handleAgree = () => {
-    dispatchEventAction('agree')
+  const handleAgree = async () => {
+    await dispatchEventAction('agree')
+    handleClose()
   }
 
-  const handleComplete = () => {
-    dispatchEventAction('complete', {
-      completedBy: event.completedBy || []
-    })
+  const handleComplete = ({ rating, comment }) => {
+    dispatch(updateEvent({
+      id: event.id,
+      action: {
+        type: 'complete',
+        rating,
+        review: comment,
+        role: event.participants.find(p => p.user === user.id)?.role
+      }
+    }))
+    handleClose()
   }
 
   const handleCancel = () => {
+    const confirmed = window.confirm('Haluatko varmasti peruuttaa tapahtuman?')
+    if (!confirmed) return
     dispatchEventAction('cancel', {
       reason: addInfo.fields.value
     })
+    handleClose()
   }
 
   const status = event?.status
 
-  const otherUserNeedsToConfirm =
-    event && event?.lastModifiedBy.toString() === user.id.toString()
-
+  const isLastModifiedByMe =
+  event?.lastModifiedBy?.user.toString() === user?.id?.toString()
   const canAgree =
-    otherUserNeedsToConfirm
+  event &&
+  status === 'kesken' &&
+  !isLastModifiedByMe
 
   const canEdit =
     !event || status === 'kesken'
@@ -132,8 +144,16 @@ const EventForm = ({ help, event, onClose }) => {
   status === 'sovittu' &&
   !event.completedBy?.some(p => p.user === user.id)
 
+
+  const eventDateTime = event
+    ? dayjs(event.date).hour(dayjs(event.time).hour()).minute(dayjs(event.time).minute())
+    : null
+
+  const hasStarted = eventDateTime ? dayjs().isAfter(eventDateTime) : false
+
   const canCancel =
-    status === 'kesken' || status === 'sovittu'
+    (status === 'kesken' || status === 'sovittu') &&
+    !hasStarted
 
   return (
     <div>
@@ -147,7 +167,12 @@ const EventForm = ({ help, event, onClose }) => {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{event ? (
           <>
-            <Typography color='info'>{canEdit ? `LÄHETÄ MUOKATTU EHDOTUS ${!isLastModifiedByMe ? 'TAI VAHVISTA EHDOTETTU' : ''}`: ''}</Typography>
+            <Typography color='info'>
+              {
+                canEdit
+                  ? `LÄHETÄ MUOKATTU EHDOTUS ${!isLastModifiedByMe ? 'TAI VAHVISTA EHDOTETTU' : ''}`
+                  : ''}
+            </Typography>
             <Typography > {event.helpId.task}</Typography>
           </>
         )
@@ -156,21 +181,23 @@ const EventForm = ({ help, event, onClose }) => {
         </DialogTitle>
         <DialogContent>
           <form onSubmit={handleSubmit} id='event-form'>
-            <DialogContentText component="div">              {event?.status === 'sovittu' && event.completedBy?.length === 1 && (
-              <Typography color="warning.main">
-                  Odottaa toisen kuittausta
-              </Typography>
-            )}
-            {event &&
-                <>
-                  <Typography >Auttaja: {isUserHelper || userNotAsking ? user.name : otherParticipant.name}</Typography>
-                  <Typography >Auttaa: {isUserHelper || userNotAsking ? otherParticipant.name : user.name}</Typography>
-                </>}
-            {help &&
-                <>
-                  <Typography >Auttaja: {help?.asking ? user.name : notifier}</Typography>
-                  <Typography >Auttaa: {help?.asking ? notifier : user.name}</Typography>
-                </>}
+            <DialogContentText component="div">
+              {event?.status === 'sovittu' && event.completedBy?.length === 1 && (
+                event?.completedBy.some(u => u.user.toString() === user.id.toString())                  ?
+                  <Typography color="warning.main">
+                    Odottaa toisen osapuolen kuittausta
+                  </Typography>
+                  :
+                  <Typography color="warning.main">
+                    Merkitse valmiiksi antamalla palaute.
+                    Palautteen antaminen siirtää pavut auttajalle.
+                  </Typography>
+              )}
+              <>
+                <Typography >Auttaja: { helperName }</Typography>
+                <Typography >Auttaa: { helpedName }</Typography>
+              </>
+
             </DialogContentText>
 
             {/* date -field*/}
@@ -202,67 +229,63 @@ const EventForm = ({ help, event, onClose }) => {
 
             {/* beans -field */}
             <TextField
-              type='number'
-              label='papua'
+              type="number"
+              label="papua"
               fullWidth
-              slotProps={{
-                htmlInput: {
-                  max: 1000,
-                  min: 0
-                }
-              }}
-              sx={{ mt: 2 }}
-              style={{ marginBottom: '20px' }}
-              {...beans.fields}
+              value={beans.fields.value}
+              onChange={beans.fields.onChange}
+              inputProps={{ min: 0, max: 1000 }}
             />
 
             {/* addInfo -field */}
             <TextField
-              label='lisätietoja'
+              label="lisätietoja"
               multiline
               rows={4}
               fullWidth
-              style={{ marginBottom: '20px' }}
-              {...addInfo.fields}
+              value={addInfo.fields.value}
+              onChange={addInfo.fields.onChange}
+              sx={{ mt: 2, mb: 2 }}
             />
           </form>
-          {event?.status === 'valmis' && (
-            <EventReviewForm event={event} />
-          )}
+
         </DialogContent>
-        <DialogActions>
+        {/* BUTTONS KAHTEEN RIVIIN */}
+        <DialogActions sx={{ flexDirection: 'column', alignItems: 'stretch', gap: 1 }}>
 
-          {/* cancel button closes a dialog */}
-          <Button onClick={handleClose} color='secondary'>
-            Takaisin
-          </Button>
-
-          {/*event && (*/}
-          <>
+          {/* RIVI 1 */}
+          <Box display="flex" gap={1}>
             {canEdit && (
-              <Button type='submit' color='primary' form='event-form'>
-                  Tallenna odottamaan vahvistus
+              <Button type='submit' variant='contained' form='event-form' fullWidth>
+                Lähetä muokattu ehdotus
               </Button>
             )}
-
             {canAgree && (
-              <Button onClick={handleAgree} color="success">
-                  Vahvista
+              <Button onClick={handleAgree} color="success" variant='contained' fullWidth>
+                Vahvista ehdotettu
               </Button>
             )}
-
             {canComplete && (
-              <Button onClick={handleComplete} color="primary">
-                  Merkitse tehdyksi
-              </Button>
+              <FeedBackSection
+                canComplete={canComplete}
+                handleComplete={handleComplete}
+              />
             )}
+          </Box>
+
+          {/* RIVI 2 */}
+          <Box display="flex" justifyContent="space-between" gap={1}>
+            <Button onClick={handleClose} color='secondary' fullWidth>
+              Takaisin
+            </Button>
+
             {canCancel && (
-              <Button onClick={handleCancel} color="error">
-                  Peruuta tehtävä
+              <Button onClick={handleCancel} color="error" fullWidth>
+                Peruuta tapahtuma
               </Button>
             )}
-          </>
-          {/*} )}*/}
+          </Box>
+
         </DialogActions>
       </Dialog>
     </div>

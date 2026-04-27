@@ -32,6 +32,15 @@ export const appendEvent = createAsyncThunk(
 export const updateEvent = createAsyncThunk(
   'events/update',
   async ({ id, action }, { dispatch, rejectWithValue }) => {
+
+    const eventDateTime = dayjs(event.date)
+      .hour(dayjs(event.time).hour())
+      .minute(dayjs(event.time).minute())
+
+    if (action.type === 'cancel' && dayjs().isAfter(eventDateTime)) {
+      throw new Error('Tapahtumaa ei voi enää perua tapahtuma-ajan jälkeen')
+    }
+
     try {
       const builder = eventActionRegistry[action.type]
 
