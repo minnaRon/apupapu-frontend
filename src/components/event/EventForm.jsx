@@ -142,11 +142,11 @@ const EventForm = ({ help, event, onClose }) => {
         </Button>
       )}
       {/* dialog-view */}
-      <Dialog open={open || isEdit} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{event ? (
           <>
-            <Typography>{canEdit ? 'MUOKATTAVISSA': ''}</Typography>
-            {event.helpId.task}
+            <Typography color='info'>{canEdit ? `LÄHETÄ MUOKATTU EHDOTUS ${!isLastModifiedByMe ? 'TAI VAHVISTA EHDOTETTU' : ''}`: ''}</Typography>
+            <Typography > {event.helpId.task}</Typography>
           </>
         )
           : help.task
@@ -268,4 +268,3 @@ const EventForm = ({ help, event, onClose }) => {
 }
 
 export default EventForm
-

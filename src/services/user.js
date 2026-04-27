@@ -1,5 +1,4 @@
 let token = null
-
 const STORAGE_KEY = 'loggedApupapuAppUser'
 
 const setUser = (user) => {

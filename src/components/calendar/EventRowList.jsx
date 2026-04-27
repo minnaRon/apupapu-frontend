@@ -37,7 +37,7 @@ export default function EventRowList({ event, onClick }) {
                 onClick={() => onClick(event)}
                 sx={{ mt: 1 }}
               >
-                Muokkaa
+                Avaa
               </Button>
             }
             { /* TEE TÄNNE MAHDOLLISUUS AVATA UUSI KOPIO PERUTUSTA / VALMIISTA */ }

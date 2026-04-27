@@ -10,6 +10,9 @@ const Footer = () => {
     <div style={footerStyle}>
       <br />
       <p>
+        NAAPURIAPUA APUNAPAPU
+      </p>
+      <p>
         Apuja & papuja kaikelle kansalle alkaen vuodesta 2025
       </p>
     </div>

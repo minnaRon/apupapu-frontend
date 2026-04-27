@@ -171,7 +171,7 @@ export default function EventRowTable({
                 overflow: 'hidden'
               }}
             >
-              {event.addInfo || 'Ei lisätietoja'}
+              {event.addInfo}
             </Typography>
           </Box>
 
