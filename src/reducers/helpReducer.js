@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, isPending, isFulfilled, isRejected } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { notify } from './notificationReducer'
 import helpService from '../services/helps'
 
@@ -80,17 +80,23 @@ const helpSlice = createSlice({
         state.helps = state.helps.filter(h => h.id !== action.payload)
       })
       // Matchers loading/error
-      .addMatcher(isPending, (state) => {
-        state.loading = true
-        state.error = null
-      })
-      .addMatcher(isFulfilled, (state) => {
-        state.loading = false
-      })
-      .addMatcher(isRejected, (state, action) => {
-        state.loading = false
-        state.error = action.payload || 'Something went wrong'
-      })
+      .addMatcher(
+        (action) => action.type.startsWith('helps/') && action.type.endsWith('/pending'),
+        (state) => {
+          state.loading = true
+          state.error = null
+        })
+      .addMatcher(
+        (action) => action.type.startsWith('helps/') && action.type.endsWith('/fulfilled'),
+        (state) => {
+          state.loading = false
+        })
+      .addMatcher(
+        (action) => action.type.startsWith('helps/') && action.type.endsWith('/rejected'),
+        (state, action) => {
+          state.loading = false
+          state.error = action.payload || 'Something went wrong'
+        })
   }
 })
 

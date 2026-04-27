@@ -105,21 +105,18 @@ const eventSlice = createSlice({
         (state) => {
           state.loading = true
           state.error = null
-        }
-      )
+        })
       .addMatcher(
         (action) => action.type.startsWith('events/') && action.type.endsWith('/fulfilled'),
         (state) => {
           state.loading = false
-        }
-      )
+        })
       .addMatcher(
         (action) => action.type.startsWith('events/') && action.type.endsWith('/rejected'),
         (state, action) => {
           state.loading = false
           state.error = action.payload || 'Something went wrong'
-        }
-      )
+        })
   }
 })
 

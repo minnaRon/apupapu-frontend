@@ -17,7 +17,7 @@ const getUser = () => {
 }
 
 const clearUser = () => {
-  localStorage.clear()
+  localStorage.removeItem(STORAGE_KEY)
   token = null
 }
 
