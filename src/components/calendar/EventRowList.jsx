@@ -1,10 +1,12 @@
 import { useState } from 'react'
+import { useSelector } from 'react-redux'
 import { getEventColor } from '../../domain/eventRules'
 import { Collapse, Button } from '@mui/material'
 import dayjs from 'dayjs'
 import EventForm from '../event/EventForm'
 
 export default function EventRowList({ event, onClick }) {
+  const user = useSelector(state => state.user.user)
   const [expanded, setExpanded] = useState(false)
 
   return (
@@ -12,7 +14,7 @@ export default function EventRowList({ event, onClick }) {
       style={{
         padding: 10,
         marginBottom: 8,
-        borderLeft: `4px solid ${getEventColor(event)}`,
+        borderLeft: `4px solid ${getEventColor(event, user.id)}`,
         background: '#f7f7f7'
       }}
     >

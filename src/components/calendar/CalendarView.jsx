@@ -1,7 +1,9 @@
+import { useSelector } from 'react-redux'
 import { DateCalendar, PickersDay } from '@mui/x-date-pickers'
 import { getEventColor } from '../../domain/eventRules'
 
 export default function CalendarView({ eventsByDate, onDayClick }) {
+  const user = useSelector(state => state.user.user)
 
   function CustomDay(props) {
     const { day, outsideCurrentMonth, ...other } = props
@@ -37,7 +39,7 @@ export default function CalendarView({ eventsByDate, onDayClick }) {
                 width: 5,
                 height: 5,
                 borderRadius: '50%',
-                backgroundColor: getEventColor(e)
+                backgroundColor: getEventColor(e, user.id)
               }}
             />
           ))}

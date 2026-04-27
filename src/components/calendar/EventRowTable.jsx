@@ -31,7 +31,7 @@ export default function EventRowTable({
         minWidth: 0,
         p: 1,
         cursor: 'pointer',
-        borderLeft: `5px solid ${getEventColor(event)}`
+        borderLeft: `5px solid ${getEventColor(event, user.id)}`
       }}
     >
 
@@ -90,12 +90,12 @@ export default function EventRowTable({
       >
         <Typography
           variant="subtitle2"
-          sx={{ color: getEventColor(event) }}
+          sx={{ color: getEventColor(event, user.id) }}
         >
           {event.status}
         </Typography>
 
-        {event.status === 'kesken' && (
+        {(['kesken', 'sovittu'].includes(event.status)) &&
           <IconButton
             size="small"
             onClick={(e) => {
@@ -106,7 +106,7 @@ export default function EventRowTable({
           >
             <EditIcon fontSize="small" color='info' />
           </IconButton>
-        )}
+        }
       </Box>
 
       {/* DETAILS */}
