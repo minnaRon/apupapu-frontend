@@ -12,8 +12,7 @@ import { setUserFromStorage } from './reducers/userReducer'
 import { initializeHelps } from './reducers/helpReducer'
 import { logoutUser } from './reducers/userReducer'
 import UserSettingsForm from './components/user/UserSettingsForm'
-import EventList from './components/event/EventList'
-import EventPage from './components/event/EventPage'
+import EventTable from './components/event/EventTable'
 
 
 const App = () => {
@@ -48,8 +47,7 @@ const App = () => {
         <Route path='/' element={<Navigate to='/helps' />} />
         <Route path='/info' element={<AppInfo />} />
         <Route path='/helps' element={<HelpMain />} />
-        <Route path='/helps/events' element={<EventList />} />
-        <Route path='/helps/events/:id' element={<EventPage />} />
+        <Route path='/helps/events' element={<EventTable />} />
         <Route path='/lends' element={<LendHomePage />} />
         <Route path='/user/settings' element={<UserSettingsForm />} />
       </Routes>

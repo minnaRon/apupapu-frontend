@@ -11,9 +11,9 @@ import NewHelpForm from './NewHelpForm'
 import AskHelpForm from './AskHelpForm'
 import HelpList from './HelpList'
 import Search from '../Search'
-import EventList from '../event/EventList'
 import CalendarDashboard from '../calendar/CalendarDashboard'
-import CoffeeCup from './coffeeCup'
+import CoffeeCup from './CoffeeCup'
+import { initializeHelps } from '../../reducers/helpReducer'
 import { initializeEvents } from '../../reducers/eventReducer'
 
 const HelpMain = () => {
@@ -100,7 +100,6 @@ const HelpMain = () => {
             </AccordionSummary>
             <AccordionDetails sx={{ padding: 0, margin: 0, width: '100%' }}>
               <CalendarDashboard />
-              {/* <EventList /> */}
             </AccordionDetails>
           </Accordion>
 

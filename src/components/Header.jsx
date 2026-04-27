@@ -172,7 +172,11 @@ const Header = () => {
           {
             !name
               ? <Box sx={{ flexGrow: 0 }}>
-                <IconButton sx={{ my: 2, color: 'white' }} onClick={() => setOpenLogin(true)}>< LoginOutlinedIcon /> </IconButton>
+                <IconButton
+                  sx={{ my: 2, color: 'white' }}
+                  onClick={() => setOpenLogin(true)}>
+                  < LoginOutlinedIcon />
+                </IconButton>
                 <LoginForm setOpenLogin={setOpenLogin} openLogin={openLogin} />
               </Box>
               : <Box sx={{ flexGrow: 0 }}>

@@ -15,19 +15,15 @@ import useField from '../../hooks/useField'
 import { useDispatch, useSelector } from 'react-redux'
 import { appendEvent, updateEvent } from '../../reducers/eventReducer'
 import { DatePicker, TimePicker } from '@mui/x-date-pickers'
-import EventReviewForm from './EventReviewForm'
+import FeedBackSection from './FeedBackSection'
 import dayjs from 'dayjs'
 import 'dayjs/locale/fi'
 
 const EventForm = ({ help, event, onClose }) => {
-  const beans = useField('number', event?.beans || help.beans)
-  const addInfo = useField('text', event?.addInfo || '')
+  const beans = useField('number', event?.beans ?? help.beans)
+  const addInfo = useField('text', event?.addInfo ?? '')
   const dispatch = useDispatch()
   const user = useSelector(state => state.user.user)
-  const otherParticipant = event?.participants.find(p => p.user.id !== user.id).user
-  const role = event?.participants?.find(p => p.user === user.id)?.role
-  const isUserHelper = role === 'helper'
-
   const [open, setOpen] = useState(false)
   const [time, setTime] = useState(event ? dayjs(event.time) : dayjs())
   const [date, setDate] = useState(event ? dayjs(event.date) : dayjs())
