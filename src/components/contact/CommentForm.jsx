@@ -1,26 +1,28 @@
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import useField from '../../hooks/useField'
 import { appendComment } from '../../reducers/commentReducer'
 
-const CommentForm = ({ helpId }) => {
+const CommentForm = ({ helpId, targetUserId }) => {
   const message = useField('text')
   const dispatch = useDispatch()
-  const user = useSelector(state => state.user.user)
 
   const handleCancel = () => {
     message.reset()
   }
+
   const handleSubmit = (event) => {
     event.preventDefault()
     const newComment = {
-      sender: user.id,
       message: message.fields.value,
       helpId
     }
-    dispatch(appendComment(newComment))
+    dispatch(appendComment({
+      ...newComment,
+      targetUserId
+    }))
     message.reset()
   }
 

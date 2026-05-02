@@ -4,9 +4,11 @@ import commentService from '../services/comments'
 
 export const initializeComments = createAsyncThunk(
   'comments/fetchAll',
-  async (helpId, { rejectWithValue }) => {
+  async ({ helpId, targetUserId }, { getState, rejectWithValue }) => {
     try {
-      return await commentService.getAll(helpId)
+      const userId = getState().user.user.id
+      const data = await commentService.getAll(helpId, targetUserId)
+      return { data, helpId, userId, targetUserId }
     } catch (err) {
       return rejectWithValue(err.message)
     }
@@ -43,7 +45,7 @@ export const updateComment = createAsyncThunk(
 
 export const removeComment = createAsyncThunk(
   'comments/delete',
-  async({ id, object }, { dispatch, rejectWithValue }) => {
+  async ({ id, object }, { dispatch, rejectWithValue }) => {
     try {
       await commentService.remove(id, object)
       dispatch(notify({ message: 'Poisto onnistui', type: 'success' }))
@@ -58,28 +60,59 @@ export const removeComment = createAsyncThunk(
 const commentSlice = createSlice({
   name: 'comments',
   initialState: {
-    comments: [],
+    conversations: {
+      // key: `${helpId}_${pairKey}`,
+      // value: { helpId, pairKey, otherUserId, comments: [] }
+    },
     loading: false,
     error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Fulfilled-cases
       .addCase(initializeComments.fulfilled, (state, action) => {
-        state.comments = action.payload
+        const { data, helpId } = action.payload
+        if (!data || data.length === 0) return
+        const pairKey = data[0].pairKey
+        const key = `${helpId}_${pairKey}`
+        state.conversations[key] = {
+          helpId,
+          pairKey,
+          otherUserId: pairKey
+            .split('_')
+            .find(id => id !== data[0].sender.id),
+          comments: data
+        }
       })
       .addCase(appendComment.fulfilled, (state, action) => {
-        state.comments.push(action.payload)
+        const comment = action.payload
+        const helpId = comment.helpId
+        const pairKey = comment.pairKey
+        const key = `${helpId}_${pairKey}`
+        if (!state.conversations[key]) {
+          state.conversations[key] = {
+            helpId,
+            pairKey,
+            otherUserId: pairKey
+              .split('_')
+              .find(id => id !== (comment.sender.id || comment.sender)),
+            comments: []
+          }
+        }
+
+        state.conversations[key].comments.push(comment)
       })
       .addCase(updateComment.fulfilled, (state, { payload }) => {
-        const { id } = payload
-        state.comments = state.comments.map(h => h.id !== id ? h : payload)
+        Object.values(state.conversations).forEach(conv => {
+          conv.comments = conv.comments.map(c => (c.id !== payload.id ? c : payload))
+        })
       })
       .addCase(removeComment.fulfilled, (state, action) => {
-        state.comments = state.comments.filter(h => h.id !== action.payload)
+        Object.values(state.conversations).forEach(conv => {
+          conv.comments = conv.comments.filter(c => c.id !== action.payload)
+        })
       })
-      // Matchers loading/error
+      // Loading/Error matchers
       .addMatcher(
         (action) => action.type.startsWith('comments/') && action.type.endsWith('/pending'),
         (state) => {
@@ -88,9 +121,7 @@ const commentSlice = createSlice({
         })
       .addMatcher(
         (action) => action.type.startsWith('comments/') && action.type.endsWith('/fulfilled'),
-        (state) => {
-          state.loading = false
-        })
+        (state) => { state.loading = false })
       .addMatcher(
         (action) => action.type.startsWith('comments/') && action.type.endsWith('/rejected'),
         (state, action) => {
@@ -101,4 +132,3 @@ const commentSlice = createSlice({
 })
 
 export default commentSlice.reducer
-

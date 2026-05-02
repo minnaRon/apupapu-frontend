@@ -7,14 +7,21 @@ import {
   TextField,
   Typography,
   Button,
-  Box
+  Box,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Divider
 } from '@mui/material'
-
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import CommentForm from '../contact/CommentForm'
+import CommentList from '../contact/CommentList'
 import { useState, useEffect } from 'react'
 import useField from '../../hooks/useField'
 import { useDispatch, useSelector } from 'react-redux'
 import { appendEvent, updateEvent } from '../../reducers/eventReducer'
 import { DatePicker, TimePicker } from '@mui/x-date-pickers'
+import { resolveOtherUserId } from '../../domain/commentUtils'
 import FeedbackSection from './FeedbackSection'
 import dayjs from 'dayjs'
 import 'dayjs/locale/fi'
@@ -44,6 +51,8 @@ const EventForm = ({ help, event, onClose }) => {
 
   const helperName = helperParticipant?.user?.name || help?.notifier || 'tuntematon'
   const helpedName = helpedParticipant?.user?.name || user?.name || 'tuntematon'
+
+  const otherUserId = resolveOtherUserId({ help, eventData: event, comments: [], userId: user.id })
 
   /** opens a dialog */
   const handleClickOpen = () => {
@@ -131,11 +140,12 @@ const EventForm = ({ help, event, onClose }) => {
   const status = event?.status
 
   const isLastModifiedByMe =
-  event?.lastModifiedBy?.user.toString() === user?.id?.toString()
+    event?.lastModifiedBy?.user.toString() === user?.id?.toString()
+
   const canAgree =
-  event &&
-  status === 'kesken' &&
-  !isLastModifiedByMe
+    event &&
+    status === 'kesken' &&
+    !isLastModifiedByMe
 
   const canEdit =
     !event || status === 'kesken'
@@ -250,6 +260,7 @@ const EventForm = ({ help, event, onClose }) => {
           </form>
 
         </DialogContent>
+
         {/* BUTTONS KAHTEEN RIVIIN */}
         <DialogActions sx={{ flexDirection: 'column', alignItems: 'stretch', gap: 1 }}>
 
@@ -276,7 +287,7 @@ const EventForm = ({ help, event, onClose }) => {
           {/* RIVI 2 */}
           <Box display="flex" justifyContent="space-between" gap={1}>
             <Button onClick={handleClose} color='secondary' fullWidth>
-              Takaisin
+              Sulje
             </Button>
 
             {canCancel && (
@@ -287,6 +298,20 @@ const EventForm = ({ help, event, onClose }) => {
           </Box>
 
         </DialogActions>
+        <Box sx={{ mt: 3 }}>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              sx={{ bgcolor: 'primary.main', color: 'white' }}
+            >
+              <Typography component="span">UUSI VIESTI</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <CommentForm helpId={help?.id || event?.helpId.id} targetUserId={otherUserId}/>
+              <CommentList helpId={help?.id || event?.helpId.id} targetUserId={otherUserId}/>
+            </AccordionDetails>
+          </Accordion>
+        </Box>
       </Dialog>
     </div>
   )

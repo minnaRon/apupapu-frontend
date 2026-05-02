@@ -17,27 +17,21 @@ import CloseIcon from '@mui/icons-material/Close'
 import LiveHelpOutlinedIcon from '@mui/icons-material/LiveHelpOutlined'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
-import { useState, forwardRef, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useState, forwardRef } from 'react'
+import { useSelector } from 'react-redux'
 import CommentForm from './CommentForm'
 import CommentList from './CommentList'
 import EventForm from '../event/EventForm'
 import EventTable from '../event/EventTable'
-import { initializeComments } from '../../reducers/commentReducer'
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
 })
 
-const ContactMain = ({ help }) => {
+const ContactMain = ({ help, targetUserId }) => {
   const [open, setOpen] = useState(false)
   const [selectedEvent, setSelectedEvent] = useState(null)
-  const dispatch = useDispatch()
   const events = useSelector(state => state.events.events)
-
-  useEffect(() => {
-    dispatch(initializeComments(help.id))
-  }, [dispatch, help.id])
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -129,11 +123,11 @@ const ContactMain = ({ help }) => {
               <Typography component="span">UUSI VIESTI</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <CommentForm helpId={help.id} />
+              <CommentForm helpId={help.id} targetUserId={targetUserId} />
             </AccordionDetails>
           </Accordion>
           <Divider />
-          <CommentList />
+          <CommentList helpId={help.id} targetUserId={targetUserId} />
         </Box>
       </Dialog>
       {/* EVENT FORM */}

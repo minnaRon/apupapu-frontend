@@ -11,8 +11,12 @@ const config = () => {
   }
 }
 
-const getAll = async (helpId) => {
-  const response = await axios.get(`${baseUrl}/${helpId}/comments`, config())
+const getAll = async (helpId, targetUserId) => {
+  const params = targetUserId ? { targetUserId } : {}
+  const response = await axios.get(
+    `${baseUrl}/${helpId}/comments`,
+    { ...config(), params }
+  )
   return response.data
 }
 

@@ -105,7 +105,7 @@ const Help = ({ help }) => {
                     </ButtonGroup>
                   </Box>
                   :
-                  <ContactMain help={help} />
+                  <ContactMain help={help}  targetUserId={help.notifierId} />
               }
             </Collapse>
           </TableCell>

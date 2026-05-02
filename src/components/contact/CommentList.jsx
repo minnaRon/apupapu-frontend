@@ -1,25 +1,18 @@
 import { List } from '@mui/material'
 
-import { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useConversation } from '../../hooks/useConversation'
 import ContactComment from './ContactComment'
 
-const CommentList = () => {
-  const [sortedList, setSortedList] = useState([])
-  const comments = useSelector(state => state.comments?.comments)
-
-  useEffect(() => {
-    const sortedList = [...comments]
-      .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-    setSortedList(sortedList)
-  }, [comments])
-
-  if (!comments) return null
+const CommentList = ({ helpId, targetUserId }) => {
+  const { comments } = useConversation({ helpId, targetUserId })
+  const sorted = [...comments].sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  )
 
   return (
-    <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-      {sortedList.map(comment =>
-        <ContactComment key={comment.id} comment={comment} />
+    <List>
+      {sorted.map(c =>
+        <ContactComment key={c.id} comment={c} />
       )}
     </List>
   )
