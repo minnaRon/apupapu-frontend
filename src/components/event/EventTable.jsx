@@ -1,12 +1,11 @@
 import { Paper, Box, Typography } from '@mui/material'
 import { useState, useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import EventRowTable from '../calendar/EventRowTable'
+import EventRowTable from './EventRowTable'
 
 export default function EventTable({ events, onEventClick, title }) {
 
   const user = useSelector(state => state.user.user)
-
   const [openId, setOpenId] = useState(null)
   const loaderRef = useRef(null)
   const [visible, setVisible] = useState(5)

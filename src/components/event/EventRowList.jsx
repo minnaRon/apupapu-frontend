@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { getEventColor } from '../../domain/eventRules'
 import { Collapse, Button } from '@mui/material'
 import dayjs from 'dayjs'
-import EventForm from '../event/EventForm'
+import EventForm from './EventForm'
 
 export default function EventRowList({ event, onClick }) {
   const user = useSelector(state => state.user.user)

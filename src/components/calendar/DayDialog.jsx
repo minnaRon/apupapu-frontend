@@ -1,5 +1,5 @@
 import { Dialog, Box } from '@mui/material'
-import EventRowList from './EventRowList'
+import EventRowList from '../event/EventRowList'
 
 export default function DayDialog({ open, events, onClose, onEventClick }) {
   return (
